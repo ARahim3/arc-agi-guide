@@ -1,0 +1,1447 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mastering ARC-AGI: An Interactive Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .active-nav { background-color: #e2e8f0; color: #2563eb; font-weight: 600; }
+        .nav-link:hover { background-color: #f1f5f9; }
+        .prose-styles { max-width: none; }
+        .prose-styles h1, .prose-styles h2, .prose-styles h3, .prose-styles h4 { color: #1e293b; letter-spacing: -0.025em; }
+        .prose-styles h1 { font-size: 2.25rem; line-height: 2.5rem; font-weight: 700; margin-bottom: 2rem; }
+        .prose-styles h2 { font-size: 1.875rem; line-height: 2.25rem; font-weight: 600; margin-top: 3rem; margin-bottom: 1.5rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.5rem; }
+        .prose-styles h3 { font-size: 1.5rem; line-height: 2rem; font-weight: 600; margin-top: 2.5rem; margin-bottom: 1rem; }
+        .prose-styles h4 { font-size: 1.25rem; line-height: 1.75rem; font-weight: 600; margin-top: 2rem; margin-bottom: 0.75rem; }
+        .prose-styles p, .prose-styles ul, .prose-styles blockquote, .prose-styles ol { margin-bottom: 1.25rem; color: #334155; line-height: 1.75; }
+        .prose-styles ul, .prose-styles ol { list-style-position: outside; padding-left: 1.5rem; }
+        .prose-styles li { margin-bottom: 0.5rem; }
+        .prose-styles a { color: #2563eb; font-weight: 500; text-decoration: none; transition: color 0.2s; }
+        .prose-styles a:hover { color: #1d4ed8; text-decoration: underline; }
+        .prose-styles code { color: #475569; padding: 0.2em 0.4em; border-radius: 4px; font-size: 0.9em; }
+        .prose-styles pre { background-color: #1e293b; color: #e2e8f0; padding: 1.5rem; border-radius: 0.5rem; overflow-x: auto; margin-bottom: 1.5rem; }
+        .prose-styles blockquote { border-left: 4px solid #93c5fd; padding-left: 1rem; font-style: italic; color: #475569; }
+        .prose-styles table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; margin-top: 1.5rem; }
+        .prose-styles th, .prose-styles td { border: 1px solid #e2e8f0; padding: 0.75rem 1rem; text-align: left; }
+        .prose-styles th { background-color: #f8fafc; font-weight: 600; color: #334155; }
+        .prose-styles tr:nth-child(even) { background-color: #f8fafc; }
+        .interactive-card { transition: transform 0.3s, box-shadow 0.3s; }
+        .interactive-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1); }
+        .tab-btn { transition: all 0.2s ease; position: relative; }
+        .tab-btn.active { border-color: #2563eb; color: #2563eb; background-color: #eff6ff; position: relative; font-weight: 600; }
+        .tab-btn.active::after { content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 3px; background-color: #2563eb; border-radius: 2px 2px 0 0; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .hero-gradient { 
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: grid;
+            grid-template-columns: repeat(20, 1fr);
+            grid-template-rows: repeat(8, 1fr);
+            gap: 1px;
+            padding: 20px;
+            opacity: 0.4;
+        }
+        @media (min-width: 768px) {
+            .hero-grid {
+                padding: 40px;
+                opacity: 0.4;
+            }
+        }
+        @media (max-width: 767px) {
+            .hero-grid {
+                background-image: 
+                    linear-gradient(rgba(71, 85, 105, 0.08) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(71, 85, 105, 0.08) 1px, transparent 1px);
+                background-size: 40px 40px;
+                display: block;
+                padding: 15px;
+                opacity: 0.3;
+            }
+        }
+        .grid-cell {
+            background: transparent;
+            border: 1px solid rgba(71, 85, 105, 0.1);
+            transition: all 0.3s ease;
+        }
+        .grid-cell.sky-blue { background: #7dd3fc; opacity: 0.8; }
+        .grid-cell.magenta { background: #ec4899; opacity: 0.8; }
+        .grid-cell.yellow { background: #fbbf24; opacity: 0.8; }
+        .hero-grid::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 70%, rgba(139, 92, 246, 0.08) 0%, transparent 50%);
+        }
+        .arc-grid-cell {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 2px;
+            padding: 4px;
+            opacity: 0.4;
+            animation: arcCellTransform 8s ease-in-out infinite;
+        }
+        .arc-grid-cell:nth-child(2) { animation-delay: -2s; }
+        .arc-grid-cell:nth-child(3) { animation-delay: -4s; }
+        .arc-grid-cell:nth-child(4) { animation-delay: -6s; }
+        .arc-mini-cell-bg {
+            border-radius: 2px;
+            transition: all 0.8s ease;
+        }
+        .checklist-item.completed .checklist-box {
+            background-color: #16a34a; /* green-600 */
+            border-color: #16a34a; /* green-600 */
+            position: relative;
+        }
+        .checklist-item.completed .checklist-box::after {
+            content: '';
+            position: absolute;
+            left: 6px;
+            top: 2px;
+            width: 5px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 3px 3px 0;
+            transform: rotate(45deg);
+        }
+        .checklist-item.completed .text-slate-700 {
+            text-decoration: line-through;
+            color: #64748b; /* slate-500 */
+        }
+        @keyframes gridShift {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(60px, 60px); }
+        }
+        @keyframes arcCellTransform {
+            0%, 100% { opacity: 0.3; transform: scale(1) rotate(0deg); }
+            25% { opacity: 0.6; transform: scale(1.05) rotate(1deg); }
+            50% { opacity: 0.8; transform: scale(1.1) rotate(0deg); }
+            75% { opacity: 0.6; transform: scale(1.05) rotate(-1deg); }
+        }
+        .section-divider { background: linear-gradient(90deg, transparent, #e2e8f0, transparent); height: 1px; margin: 3rem 0; }
+        .floating-element { animation: float 6s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
+        .code-preview { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .methodology-icon { width: 80px; height: 80px; margin: 0 auto 1rem; }
+        .step-number { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; margin: 0 auto 1rem; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <div class="flex min-h-screen">
+        <aside id="sidebar" class="w-64 bg-white/80 backdrop-blur-sm border-r border-slate-200 p-4 md:p-6 fixed top-0 left-0 h-full overflow-y-auto transition-transform -translate-x-full md:translate-x-0 z-20 shadow-lg">
+            <div class="flex items-center mb-6">
+                <h2 class="text-lg font-bold text-slate-900">ARC-AGI</h2>
+            </div>
+            <nav id="nav-menu" class="space-y-6">
+                <div>
+                    <div class="flex items-center mb-3">
+                        <div class="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-bold mr-2">I</div>
+                        <h3 class="font-semibold text-slate-700 text-sm">Foundations</h3>
+                    </div>
+                    <ul class="space-y-1 ml-8">
+                        <li><a href="#philosophy" class="group block text-slate-600 py-2 px-3 rounded-md transition-all nav-link hover:bg-slate-50">
+                            <span class="text-xs text-slate-400 block">1.1</span>
+                            <span class="font-medium">Philosophy & Design</span>
+                            <span class="text-xs text-slate-500 block">Understanding ARC's core principles</span>
+                        </a></li>
+                        <li><a href="#ecosystem" class="group block text-slate-600 py-2 px-3 rounded-md transition-all nav-link hover:bg-slate-50">
+                            <span class="text-xs text-slate-400 block">1.2</span>
+                            <span class="font-medium">Ecosystem & Competition</span>
+                            <span class="text-xs text-slate-500 block">Rules, datasets, and evaluation</span>
+                        </a></li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="flex items-center mb-3">
+                        <div class="w-6 h-6 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center text-xs font-bold mr-2">II</div>
+                        <h3 class="font-semibold text-slate-700 text-sm">Core Methodologies</h3>
+                    </div>
+                    <ul class="space-y-1 ml-8">
+                        <li><a href="#program-synthesis" class="group block text-slate-600 py-2 px-3 rounded-md transition-all nav-link hover:bg-slate-50">
+                            <span class="text-xs text-slate-400 block">2.1</span>
+                            <span class="font-medium">Program Synthesis</span>
+                            <span class="text-xs text-slate-500 block">DSLs and symbolic reasoning</span>
+                        </a></li>
+                        <li><a href="#search" class="group block text-slate-600 py-2 px-3 rounded-md transition-all nav-link hover:bg-slate-50">
+                            <span class="text-xs text-slate-400 block">2.2</span>
+                            <span class="font-medium">Search Algorithms</span>
+                            <span class="text-xs text-slate-500 block">MCTS, beam search, neural guidance</span>
+                        </a></li>
+                        <li><a href="#tta" class="group block text-slate-600 py-2 px-3 rounded-md transition-all nav-link hover:bg-slate-50">
+                            <span class="text-xs text-slate-400 block">2.3</span>
+                            <span class="font-medium">Test-Time Adaptation</span>
+                            <span class="text-xs text-slate-500 block">Adaptive learning strategies</span>
+                        </a></li>
+                        <li><a href="#duality" class="group block text-slate-600 py-2 px-3 rounded-md transition-all nav-link hover:bg-slate-50">
+                            <span class="text-xs text-slate-400 block">2.4</span>
+                            <span class="font-medium">Induction vs. Transduction</span>
+                            <span class="text-xs text-slate-500 block">Two paths to reasoning</span>
+                        </a></li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="flex items-center mb-3">
+                        <div class="w-6 h-6 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-xs font-bold mr-2">III</div>
+                        <h3 class="font-semibold text-slate-700 text-sm">Implementation Guide</h3>
+                    </div>
+                    <ul class="space-y-1 ml-8">
+                        <li><a href="#first-solver" class="group block text-slate-600 py-2 px-3 rounded-md transition-all nav-link hover:bg-slate-50">
+                            <span class="text-xs text-slate-400 block">3.1</span>
+                            <span class="font-medium">Build Your First Solver</span>
+                            <span class="text-xs text-slate-500 block">Step-by-step tutorial</span>
+                        </a></li>
+                        <li><a href="#validation-pipeline" class="group block text-slate-600 py-2 px-3 rounded-md transition-all nav-link hover:bg-slate-50">
+                            <span class="text-xs text-slate-400 block">3.2</span>
+                            <span class="font-medium">Validation Pipeline</span>
+                            <span class="text-xs text-slate-500 block">Ensuring robust evaluation</span>
+                        </a></li>
+                        <li><a href="#champions" class="group block text-slate-600 py-2 px-3 rounded-md transition-all nav-link hover:bg-slate-50">
+                            <span class="text-xs text-slate-400 block">3.3</span>
+                            <span class="font-medium">Champion Solutions</span>
+                            <span class="text-xs text-slate-500 block">Analyzing winning approaches</span>
+                        </a></li>
+                        <li><a href="#strategies" class="group block text-slate-600 py-2 px-3 rounded-md transition-all nav-link hover:bg-slate-50">
+                            <span class="text-xs text-slate-400 block">3.4</span>
+                            <span class="font-medium">Strategies for 2025</span>
+                            <span class="text-xs text-slate-500 block">Future directions and opportunities</span>
+                        </a></li>
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+
+        <button id="menu-toggle" class="md:hidden fixed top-4 left-4 z-30 p-2 bg-white/70 backdrop-blur-sm rounded-md shadow-md">
+            <svg class="w-6 h-6 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+        </button>
+
+        <main class="md:ml-64 w-full prose-styles">
+            <div class="max-w-6xl mx-auto">
+            <section class="hero-gradient text-slate-800 p-10 md:p-16 mb-8">
+                <div class="hero-grid" id="hero-arc-grid">
+                    </div>
+                
+                
+                <div class="max-w-4xl mx-auto text-center relative z-10">
+                    <h1 class="text-4xl md:text-6xl font-bold !mb-4 !text-slate-800">Navigating ARC-AGI: From Zero to One</h1>
+                    <p class="text-xl md:text-2xl !text-slate-600 !mt-4 !mb-6">An interactive guide to the theory, implementation, and state-of-the-art strategies for the ARC-AGI Challenge.</p>
+                    <blockquote class="text-lg italic text-center text-slate-600 border-l-4 border-blue-400 pl-6 !mb-8 max-w-2xl mx-auto">
+                        "Easy for Humans, Hard for AI" — The defining characteristic that makes ARC-AGI a powerful benchmark for General Intelligence.
+                    </blockquote>
+                    <div class="flex flex-wrap justify-center gap-4 text-sm">
+                        <span class="bg-blue-100 text-blue-800 px-4 py-2 rounded-full border border-blue-200">🧠 Fluid Intelligence</span>
+                        <span class="bg-purple-100 text-purple-800 px-4 py-2 rounded-full border border-purple-200">🔬 Program Synthesis</span>
+                        <span class="bg-green-100 text-green-800 px-4 py-2 rounded-full border border-green-200">🚀 Test-Time Adaptation</span>
+                        <span class="bg-pink-100 text-pink-800 px-4 py-2 rounded-full border border-pink-200">⚖️ Induction & Transduction</span>
+                        <span class="bg-teal-100 text-teal-800 px-4 py-2 rounded-full border border-teal-200">🔧 Domain-Specific Languages</span>
+                        <span class="bg-orange-100 text-orange-800 px-4 py-2 rounded-full border border-orange-200">🏆 Competition Ready</span>
+                    </div>
+                </div>
+            </section>
+
+            <div class="px-4 py-6 md:px-8 lg:px-12 xl:px-16">
+                <section class="mb-12">
+                    <div class="bg-gradient-to-r from-blue-50 to-teal-50 p-8 rounded-xl border border-blue-100">
+                        <h2 class="!mt-0 !mb-4 text-2xl font-bold text-slate-800">What is ARC-AGI?</h2>
+                        <p class="!mb-4 text-lg">The Abstraction and Reasoning Corpus for Artificial General Intelligence (ARC-AGI) is a benchmark designed to measure fluid intelligence in AI systems. Unlike traditional benchmarks that test accumulated knowledge, ARC-AGI evaluates the ability to acquire new skills when faced with novel problems.</p>
+                        <div class="grid md:grid-cols-3 gap-6 mt-6">
+                            <div class="text-center">
+                                <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                    <span class="text-2xl">🧩</span>
+                                </div>
+                                <h4 class="!mt-0 !mb-2 font-semibold">Novel Puzzles</h4>
+                                <p class="text-sm text-slate-600">Each task is unique and designed to resist memorization.</p>
+                            </div>
+                            <div class="text-center">
+                                <div class="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                    <span class="text-2xl">⚡</span>
+                                </div>
+                                <h4 class="!mt-0 !mb-2 font-semibold">Skill Acquisition</h4>
+                                <p class="text-sm text-slate-600">Tests the efficiency of learning new skills, not just performance.</p>
+                            </div>
+                            <div class="text-center">
+                                <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                    <span class="text-2xl">🎯</span>
+                                </div>
+                                <h4 class="!mt-0 !mb-2 font-semibold">Core Knowledge</h4>
+                                <p class="text-sm text-slate-600">Uses only universal cognitive primitives for fair comparison.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="philosophy" class="pt-16">
+                    <h2>Part I: Foundations</h2>
+                    <h3>The Philosophy and Design of ARC-AGI</h3>
+                    
+                    <div class="grid md:grid-cols-2 gap-8 items-start my-8">
+                        <div>
+                            <p>The Abstraction and Reasoning Corpus for Artificial General Intelligence (ARC-AGI) is more than a benchmark; it is the manifestation of a specific, rigorous philosophy about the nature of intelligence itself. Introduced by François Chollet, it was designed to address a fundamental flaw in how the AI community measured progress.</p>
+                            
+                            <h4>Defining Intelligence: Beyond Skill, Towards Skill-Acquisition</h4>
+                            <p>The central tenet of ARC-AGI is that true, general intelligence is not demonstrated by the <strong><em>possession</em></strong> of a specific skill, but by the <strong><em>efficiency of acquiring new skills</em></strong> when faced with novel problems. This stands in stark contrast to many traditional AI benchmarks which measure performance on tasks that can be mastered through extensive training on massive datasets.</p>
+                        </div>
+                        <div class="flex items-start justify-center -mt-14">
+                            <div class="bg-white p-3 md:p-4 rounded-xl shadow-lg border w-full max-w-2xl">
+                                <h5 class="text-center font-semibold mb-3 text-slate-700">Example of an ARC Task</h5>
+                                <div class="mb-4">
+                                    <p class="text-xs text-center mb-2 text-slate-500 font-medium">Training Examples</p>
+                                    <div class="space-y-3">
+                                        <div class="flex items-center justify-center gap-2 md:gap-4">
+                                            <div class="text-center">
+                                                <div class="grid grid-cols-2 gap-0.5 w-12 h-12 md:w-16 md:h-16 mx-auto mb-1 border border-slate-200 rounded p-0.5">
+                                                    <div class="bg-sky-400 rounded-sm"></div> <div class="bg-pink-500 rounded-sm"></div> <div class="bg-pink-500 rounded-sm"></div> <div class="bg-yellow-500 rounded-sm"></div> </div>
+                                                <p class="text-xs text-slate-500 font-medium">Input</p>
+                                            </div>
+                                            <div class="text-slate-400 text-lg md:text-xl">→</div>
+                                            <div class="text-center">
+                                                <div class="grid grid-cols-6 gap-0.5 w-20 h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 mx-auto mb-1 border border-slate-200 rounded p-0.5">
+                                                    <div class="bg-sky-400 rounded-sm"></div>
+                                                    <div class="bg-pink-500 rounded-sm"></div>
+                                                    <div class="bg-sky-400 rounded-sm"></div>
+                                                    <div class="bg-pink-500 rounded-sm"></div>
+                                                    <div class="bg-sky-400 rounded-sm"></div>
+                                                    <div class="bg-pink-500 rounded-sm"></div>
+                                                    <div class="bg-pink-500 rounded-sm"></div>
+                                                    <div class="bg-yellow-500 rounded-sm"></div>
+                                                    <div class="bg-pink-500 rounded-sm"></div>
+                                                    <div class="bg-yellow-500 rounded-sm"></div>
+                                                    <div class="bg-pink-500 rounded-sm"></div>
+                                                    <div class="bg-yellow-500 rounded-sm"></div>
+                                                    <div class="bg-pink-500 rounded-sm"></div>
+                                                    <div class="bg-sky-400 rounded-sm"></div>
+                                                    <div class="bg-pink-500 rounded-sm"></div>
+                                                    <div class="bg-sky-400 rounded-sm"></div>
+                                                    <div class="bg-pink-500 rounded-sm"></div>
+                                                    <div class="bg-sky-400 rounded-sm"></div>
+                                                    <div class="bg-yellow-500 rounded-sm"></div>
+                                                    <div class="bg-pink-500 rounded-sm"></div>
+                                                    <div class="bg-yellow-500 rounded-sm"></div>
+                                                    <div class="bg-pink-500 rounded-sm"></div>
+                                                    <div class="bg-yellow-500 rounded-sm"></div>
+                                                    <div class="bg-pink-500 rounded-sm"></div>
+                                                    <div class="bg-sky-400 rounded-sm"></div>
+                                                    <div class="bg-pink-500 rounded-sm"></div>
+                                                    <div class="bg-sky-400 rounded-sm"></div>
+                                                    <div class="bg-pink-500 rounded-sm"></div>
+                                                    <div class="bg-sky-400 rounded-sm"></div>
+                                                    <div class="bg-pink-500 rounded-sm"></div>
+                                                    <div class="bg-pink-500 rounded-sm"></div>
+                                                    <div class="bg-yellow-500 rounded-sm"></div>
+                                                    <div class="bg-pink-500 rounded-sm"></div>
+                                                    <div class="bg-yellow-500 rounded-sm"></div>
+                                                    <div class="bg-pink-500 rounded-sm"></div>
+                                                    <div class="bg-yellow-500 rounded-sm"></div>
+                                                </div>
+                                                <p class="text-xs text-slate-500 font-medium">Output</p>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center justify-center gap-2 md:gap-4">
+                                            <div class="text-center">
+                                                <div class="grid grid-cols-2 gap-0.5 w-12 h-12 md:w-16 md:h-16 mx-auto mb-1 border border-slate-200 rounded p-0.5">
+                                                    <div class="bg-orange-500 rounded-sm"></div> <div class="bg-amber-800 rounded-sm"></div> <div class="bg-yellow-500 rounded-sm"></div> <div class="bg-green-500 rounded-sm"></div> </div>
+                                                <p class="text-xs text-slate-500 font-medium">Input</p>
+                                            </div>
+                                            <div class="text-slate-400 text-lg md:text-xl">→</div>
+                                            <div class="text-center">
+                                                <div class="grid grid-cols-6 gap-0.5 w-20 h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 mx-auto mb-1 border border-slate-200 rounded p-0.5">
+                                                    <div class="bg-orange-500 rounded-sm"></div>
+                                                    <div class="bg-amber-800 rounded-sm"></div>
+                                                    <div class="bg-orange-500 rounded-sm"></div>
+                                                    <div class="bg-amber-800 rounded-sm"></div>
+                                                    <div class="bg-orange-500 rounded-sm"></div>
+                                                    <div class="bg-amber-800 rounded-sm"></div>
+                                                    <div class="bg-yellow-500 rounded-sm"></div>
+                                                    <div class="bg-green-500 rounded-sm"></div>
+                                                    <div class="bg-yellow-500 rounded-sm"></div>
+                                                    <div class="bg-green-500 rounded-sm"></div>
+                                                    <div class="bg-yellow-500 rounded-sm"></div>
+                                                    <div class="bg-green-500 rounded-sm"></div>
+                                                    <div class="bg-amber-800 rounded-sm"></div>
+                                                    <div class="bg-orange-500 rounded-sm"></div>
+                                                    <div class="bg-amber-800 rounded-sm"></div>
+                                                    <div class="bg-orange-500 rounded-sm"></div>
+                                                    <div class="bg-amber-800 rounded-sm"></div>
+                                                    <div class="bg-orange-500 rounded-sm"></div>
+                                                    <div class="bg-green-500 rounded-sm"></div>
+                                                    <div class="bg-yellow-500 rounded-sm"></div>
+                                                    <div class="bg-green-500 rounded-sm"></div>
+                                                    <div class="bg-yellow-500 rounded-sm"></div>
+                                                    <div class="bg-green-500 rounded-sm"></div>
+                                                    <div class="bg-yellow-500 rounded-sm"></div>
+                                                    <div class="bg-orange-500 rounded-sm"></div>
+                                                    <div class="bg-amber-800 rounded-sm"></div>
+                                                    <div class="bg-orange-500 rounded-sm"></div>
+                                                    <div class="bg-amber-800 rounded-sm"></div>
+                                                    <div class="bg-orange-500 rounded-sm"></div>
+                                                    <div class="bg-amber-800 rounded-sm"></div>
+                                                    <div class="bg-yellow-500 rounded-sm"></div>
+                                                    <div class="bg-green-500 rounded-sm"></div>
+                                                    <div class="bg-yellow-500 rounded-sm"></div>
+                                                    <div class="bg-green-500 rounded-sm"></div>
+                                                    <div class="bg-yellow-500 rounded-sm"></div>
+                                                    <div class="bg-green-500 rounded-sm"></div>
+                                                </div>
+                                                <p class="text-xs text-slate-500 font-medium">Output</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="border-t pt-3">
+                                    <p class="text-xs text-center mb-2 text-slate-600 font-medium">Test</p>
+                                    <div class="flex items-center justify-center gap-2 md:gap-4">
+                                        <div class="text-center">
+                                            <div class="grid grid-cols-2 gap-0.25 w-12 h-12 md:w-16 md:h-16 mx-auto mb-1 border border-slate-200 rounded p-0.5">
+                                                <div class="bg-green-500 rounded-sm"></div> <div class="bg-red-500 rounded-sm"></div> <div class="bg-orange-500 rounded-sm"></div> <div class="bg-sky-400 rounded-sm"></div> </div>
+                                            <p class="text-xs text-slate-500 font-medium">Input</p>
+                                        </div>
+                                        <div class="text-slate-400 text-lg md:text-xl">→</div>
+                                        <div class="text-center">
+                                            <div class="grid grid-cols-6 gap-0.5 w-20 h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 mx-auto mb-1 border-2 border-dashed border-yellow-400 bg-yellow-50 rounded p-0.5">
+                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
+                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
+                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
+                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
+                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
+                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
+                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
+                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
+                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
+                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
+                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
+                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
+                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
+                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
+                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
+                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
+                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
+                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
+                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
+                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
+                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
+                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
+                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
+                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
+                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
+                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
+                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
+                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
+                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
+                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
+                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
+                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
+                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
+                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
+                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
+                                            </div>
+                                            <p class="text-xs text-slate-500 font-medium">Output?</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-center mt-3">
+                                    <div class="inline-block bg-slate-100 px-3 py-1 rounded-full border border-slate-300">
+                                        <span class="text-xs font-medium text-slate-700">🤔 Can you find the pattern?</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h4>Core Knowledge Priors: The Bedrock of Fair Comparison</h4>
+                    <p>To create a fair comparison between human and AI, ARC-AGI tasks are designed to be solvable using only a minimal set of <strong>Core Knowledge Priors</strong>. These are fundamental, universally shared cognitive building blocks that are either innate or acquired very early in development.</p>
+                    
+                    <div class="bg-blue-50 border-l-4 border-blue-400 p-6 rounded-r-lg my-8">
+                        <h4 class="!mt-0 !text-blue-800">Key Concept: Core Knowledge Priors</h4>
+                        <div class="grid md:grid-cols-2 gap-4 !text-blue-700">
+                            <div>
+                                <h5 class="font-semibold !mb-2">🔵 Objectness</h5>
+                                <p class="text-sm">Perceiving scenes in terms of discrete objects with properties like cohesion and persistence.</p>
+                            </div>
+                            <div>
+                                <h5 class="font-semibold !mb-2">📐 Basic Topology & Geometry</h5>
+                                <p class="text-sm">Intuitive understanding of connectivity, symmetry, inside/outside relationships, and distance.</p>
+                            </div>
+                            <div>
+                                <h5 class="font-semibold !mb-2">🔢 Elementary Number Sense</h5>
+                                <p class="text-sm">Simple counting and basic integer arithmetic.</p>
+                            </div>
+                            <div>
+                                <h5 class="font-semibold !mb-2">🎯 Goal-Directedness</h5>
+                                <p class="text-sm">The notion that actions are taken to achieve goals.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h4>The Evolution to ARC-AGI-2: Raising the Bar</h4>
+                    <p>The introduction of ARC-AGI-2 in 2025 marks a critical evolution, driven by the progress and observed failure modes of AI systems on the original dataset. While powerful AI systems could achieve high scores on ARC-AGI-1, often through brute-force search, ARC-AGI-2 was designed to be less susceptible to these methods. Furthermore, it was specifically created to probe known weaknesses in modern AI reasoning systems.</p>
+                    
+                    <div class="bg-red-50 border-l-4 border-red-400 p-6 rounded-r-lg my-8">
+                        <h4 class="!mt-0 !text-red-800">New Conceptual Hurdles in ARC-AGI-2</h4>
+                        <p class="!text-red-700">Based on the failures of frontier AI models, ARC-AGI-2 introduces tasks that test for new, more complex reasoning abilities:</p>
+                        <ul class="!text-red-700 space-y-2 mt-4">
+                            <li><strong>Symbolic Interpretation:</strong> Tasks where visual symbols must be interpreted as having semantic meaning beyond their shape, such as a shape representing an action.</li>
+                            <li><strong>Compositional Reasoning:</strong> Tasks that require discovering and applying multiple, interacting rules simultaneously.</li>
+                            <li><strong>Contextual Rule Application:</strong> Tasks where the correct rule to apply depends on the specific context within the grid, moving beyond superficial global patterns.</li>
+                        </ul>
+                    </div>
+
+                    <div class="overflow-x-auto my-8">
+                        <table class="min-w-full">
+                            <caption class="text-lg font-semibold mb-4">A Comparison of ARC-AGI-1 and ARC-AGI-2</caption>
+                            <thead>
+                                <tr><th>Feature</th><th>ARC-AGI-1</th><th>ARC-AGI-2</th><th>Rationale for Change</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><th>Launch Year</th><td>2019</td><td>2025</td><td>To address limitations and challenge modern AI systems.</td></tr>
+                                <tr><th>Primary Target</th><td>Deep Learning (Memorization)</td><td>Frontier AI Reasoning Systems</td><td>To stay ahead of AI progress and target new, complex reasoning failures.</td></tr>
+                                <tr><th>Brute-Force Susceptibility</th><td>High</td><td>Low (by design)</td><td>To ensure scores reflect intelligent adaptation, not just computational power.</td></tr>
+                                <tr><th>Key AI Challenges</th><td>Generalization, basic abstraction.</td><td>Symbolic Interpretation, Compositional Reasoning, Contextual Rule Application.</td><td>To probe specific, observed weaknesses in state-of-the-art reasoning systems.</td></tr>
+                                <tr><th>Frontier AI Performance</th><td>High (e.g., ~75% for o3-preview)</td><td>Very Low (e.g., <5% for o3-preview)</td><td>To create a wider "signal bandwidth" to differentiate AI capabilities.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <div class="section-divider"></div>
+
+                <section id="ecosystem" class="pt-16">
+                    <h3>The ARC-AGI Ecosystem: Datasets, Evaluation, and Community</h3>
+                    <p>Successfully navigating the ARC-AGI challenge requires a firm grasp of its practical ecosystem, which includes a structured set of datasets, specific evaluation protocols, and a vibrant community with essential resources.</p>
+                    
+                    <h4>Navigating the ARC Datasets</h4>
+                    <p>The ARC-AGI data is partitioned into several distinct sets, each with a specific purpose. Using them correctly is crucial for both development and fair evaluation.</p>
+                    
+                    <div class="overflow-x-auto my-8">
+                        <table class="min-w-full">
+                            <caption class="text-lg font-semibold mb-4">Overview of ARC-AGI-2 Datasets</caption>
+                            <thead>
+                                <tr><th>Dataset Name</th><th>Number of Tasks</th><th>Purpose</th><th>Access</th><th>Key Considerations</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><th>Public Training</th><td>~1,000</td><td>Training algorithms, learning Core Knowledge priors.</td><td>Public</td><td>Contains easier, "curriculum-style" tasks. Use freely for development.</td></tr>
+                                <tr><th>Public Evaluation</th><td>120</td><td>Final local evaluation of an algorithm.</td><td>Public</td><td><strong>Do not use for iterative development.</strong> Treat as a one-shot evaluation.</td></tr>
+                                <tr><th>Semi-Private Evaluation</th><td>120</td><td>Powers the public leaderboard on arcprize.org.</td><td>Private (Kaggle)</td><td>Used to test both open and closed-source models.</td></tr>
+                                <tr><th>Private Evaluation</th><td>120</td><td>Official ranking for the Kaggle prize competition.</td><td>Private (Kaggle)</td><td>The ultimate test of generalization. No internet access allowed.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h4>Understanding the Rules of the Game</h4>
+                    <div class="bg-yellow-50 border-l-4 border-yellow-400 p-6 rounded-r-lg my-8">
+                        <h4 class="!mt-0 !text-yellow-800">Competition Rules</h4>
+                        <ul class="!text-yellow-700 space-y-2">
+                            <li><strong>Evaluation Metric (pass@k):</strong> The official scoring metric is <code>pass@k</code>, which measures the percentage of tasks solved within <code>k</code> attempts. For the ARC Prize, <code>k=2</code>.</li>
+                            <li><strong>Kaggle Environment:</strong> All prize-eligible submissions must run within a standardized Kaggle Notebook environment with no internet access and strict runtime/hardware limits.</li>
+                            <li><strong>Open Source Requirement:</strong> To be eligible for prize money, teams must open-source their complete, reproducible solution under a permissive license.</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <div class="section-divider"></div>
+
+                <section id="program-synthesis" class="pt-16">
+                    <h2>Part II: Core Methodologies</h2>
+                    
+                    <div class="bg-gradient-to-r from-slate-50 to-blue-50 p-8 rounded-xl mb-12">
+                        <h3 class="!mt-0 !mb-6 text-center">The Evolution of ARC-AGI Approaches</h3>
+                        <div class="flex flex-col md:flex-row items-center justify-center space-y-6 md:space-y-0 md:space-x-8">
+                            <div class="text-center">
+                                <div class="methodology-icon bg-blue-100 rounded-full flex items-center justify-center">
+                                    <span class="text-3xl">⚙️</span>
+                                </div>
+                                <h4 class="!mt-0 !mb-2 font-bold">Program Synthesis</h4>
+                                <p class="text-sm text-slate-600">Infer explicit rules from examples</p>
+                            </div>
+                            <div class="text-2xl text-slate-400">→</div>
+                            <div class="text-center">
+                                <div class="methodology-icon bg-purple-100 rounded-full flex items-center justify-center">
+                                    <span class="text-3xl">🧠</span>
+                                </div>
+                                <h4 class="!mt-0 !mb-2 font-bold">Neural Networks</h4>
+                                <p class="text-sm text-slate-600">Guide search with learned intuition</p>
+                            </div>
+                            <div class="text-2xl text-slate-400">→</div>
+                            <div class="text-center">
+                                <div class="methodology-icon bg-green-100 rounded-full flex items-center justify-center">
+                                    <span class="text-3xl">🚀</span>
+                                </div>
+                                <h4 class="!mt-0 !mb-2 font-bold">Test-Time Adaptation</h4>
+                                <p class="text-sm text-slate-600">Adapt dynamically to each task</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3>Program Synthesis and Domain-Specific Languages (DSLs)</h3>
+                    <p>One of the most natural and historically significant approaches to ARC is program synthesis. This paradigm directly tackles the core of the challenge: inferring a general rule from examples.</p>
+                    
+                    <div class="my-8">
+                        <div class="mb-8">
+                            <h4>The Power of DSLs</h4>
+                            <p>The primary challenge in program synthesis is the vastness of the search space. A <strong>Domain-Specific Language (DSL)</strong> is essential. A DSL is a small, specialized programming language designed for ARC, consisting of a curated set of functions, or <strong>primitives</strong>, that perform common grid operations. A good DSL must be expressive enough to solve tasks while simple enough to keep the search space manageable.</p>
+                            
+                            <div class="bg-slate-100 p-4 rounded-lg mt-4 max-w-2xl">
+                                <h5 class="!mt-0 !mb-3 font-semibold">Common DSL Primitives:</h5>
+                                <div class="grid grid-cols-2 gap-2 text-sm">
+                                    <code class="px-2 py-1 rounded">rotate_grid</code>
+                                    <code class="px-2 py-1 rounded">find_objects</code>
+                                    <code class="px-2 py-1 rounded">mirror_object</code>
+                                    <code class="px-2 py-1 rounded">count_colors</code>
+                                    <code class="px-2 py-1 rounded">draw_line</code>
+                                    <code class="px-2 py-1 rounded">shift_object</code>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-lg border w-full">
+                            <h5 class="!mt-0 !mb-4 font-semibold text-center">DSL Program Example</h5>
+                            <div class="bg-slate-900 rounded-lg p-4 font-mono text-sm overflow-x-auto">
+                                <div class="flex items-center mb-3">
+                                    <div class="flex space-x-2">
+                                        <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                                        <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                                        <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                                    </div>
+                                    <div class="ml-4 text-slate-400 text-xs">solve_5521c0d9.py</div>
+                                </div>
+                                <pre class="text-slate-200 leading-relaxed text-xs whitespace-pre-wrap break-words"><code><span class="text-slate-500"># Simplified representation of the solver for task 5521c0d9 from Hodel's arc-dsl</span>
+<span class="text-purple-400">def</span> <span class="text-yellow-400">solve_5521c0d9</span><span class="text-slate-400">(</span><span class="text-blue-400">I</span><span class="text-slate-400">):</span>
+    <span class="text-slate-500"># 1. Extract all non-background objects from the input grid 'I'.</span>
+    <span class="text-blue-400">objs</span> <span class="text-slate-400">=</span> <span class="text-green-400">dsl</span><span class="text-slate-400">.</span><span class="text-yellow-400">objects</span><span class="text-slate-400">(</span><span class="text-blue-400">I</span><span class="text-slate-400">,</span> <span class="text-purple-400">univalued</span><span class="text-slate-400">=</span><span class="text-orange-400">True</span><span class="text-slate-400">,</span> <span class="text-purple-400">diagonal</span><span class="text-slate-400">=</span><span class="text-orange-400">False</span><span class="text-slate-400">,</span> <span class="text-purple-400">without_background</span><span class="text-slate-400">=</span><span class="text-orange-400">True</span><span class="text-slate-400">)</span>
+
+    <span class="text-slate-500"># 2. Merge all extracted objects into a single 'foreground' object.</span>
+    <span class="text-blue-400">foreground</span> <span class="text-slate-400">=</span> <span class="text-green-400">dsl</span><span class="text-slate-400">.</span><span class="text-yellow-400">merge</span><span class="text-slate-400">(</span><span class="text-blue-400">objs</span><span class="text-slate-400">)</span>
+
+    <span class="text-slate-500"># 3. Create a new grid by removing the foreground, leaving only the background.</span>
+    <span class="text-blue-400">empty_grid</span> <span class="text-slate-400">=</span> <span class="text-green-400">dsl</span><span class="text-slate-400">.</span><span class="text-yellow-400">cover</span><span class="text-slate-400">(</span><span class="text-blue-400">I</span><span class="text-slate-400">,</span> <span class="text-blue-400">foreground</span><span class="text-slate-400">)</span>
+
+    <span class="text-slate-500"># 4. Create a function 'offset_getter' that calculates an upward shift vector</span>
+    <span class="text-slate-500">#    equal to an object's height. This is done by composing three functions:</span>
+    <span class="text-slate-500">#    height -> invert -> toivec (get height, negate it, convert to vector).</span>
+    <span class="text-blue-400">offset_getter</span> <span class="text-slate-400">=</span> <span class="text-green-400">dsl</span><span class="text-slate-400">.</span><span class="text-yellow-400">chain</span><span class="text-slate-400">(</span><span class="text-green-400">dsl</span><span class="text-slate-400">.</span><span class="text-yellow-400">toivec</span><span class="text-slate-400">,</span> <span class="text-green-400">dsl</span><span class="text-slate-400">.</span><span class="text-yellow-400">invert</span><span class="text-slate-400">,</span> <span class="text-green-400">dsl</span><span class="text-slate-400">.</span><span class="text-yellow-400">height</span><span class="text-slate-400">)</span>
+
+    <span class="text-slate-500"># 5. Create a function 'shifter' that takes an object and moves it.</span>
+    <span class="text-slate-500">#    The 'fork' primitive applies the 'shift' operation, using the object</span>
+    <span class="text-slate-500">#    itself as the first argument and the result of 'offset_getter(object)'</span>
+    <span class="text-slate-500">#    as the second argument.</span>
+    <span class="text-blue-400">shifter</span> <span class="text-slate-400">=</span> <span class="text-green-400">dsl</span><span class="text-slate-400">.</span><span class="text-yellow-400">fork</span><span class="text-slate-400">(</span><span class="text-green-400">dsl</span><span class="text-slate-400">.</span><span class="text-yellow-400">shift</span><span class="text-slate-400">,</span> <span class="text-green-400">dsl</span><span class="text-slate-400">.</span><span class="text-yellow-400">identity</span><span class="text-slate-400">,</span> <span class="text-blue-400">offset_getter</span><span class="text-slate-400">)</span>
+
+    <span class="text-slate-500"># 6. Apply the 'shifter' function to every object in the 'objs' list</span>
+    <span class="text-slate-500">#    and merge the results into a single object of shifted shapes.</span>
+    <span class="text-blue-400">shifted</span> <span class="text-slate-400">=</span> <span class="text-green-400">dsl</span><span class="text-slate-400">.</span><span class="text-yellow-400">mapply</span><span class="text-slate-400">(</span><span class="text-blue-400">shifter</span><span class="text-slate-400">,</span> <span class="text-blue-400">objs</span><span class="text-slate-400">)</span>
+
+    <span class="text-slate-500"># 7. Paint the final 'shifted' object onto the 'empty_grid'.</span>
+    <span class="text-blue-400">O</span> <span class="text-slate-400">=</span> <span class="text-green-400">dsl</span><span class="text-slate-400">.</span><span class="text-yellow-400">paint</span><span class="text-slate-400">(</span><span class="text-blue-400">empty_grid</span><span class="text-slate-400">,</span> <span class="text-blue-400">shifted</span><span class="text-slate-400">)</span>
+
+    <span class="text-purple-400">return</span> <span class="text-blue-400">O</span></code></pre>
+                            </div>
+                            <p class="text-sm text-slate-600 mt-3 text-center">Complete solver from Michael Hodel's arc-dsl that shifts objects upward by their height</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="search" class="pt-16">
+                    <h3>The Power of Search: From Brute Force to Neurally-Guided</h3>
+                    <p>Once a DSL is defined, the core problem becomes one of search. The system must find the correct sequence of DSL primitives that solves the task.</p>
+                    
+                    <div class="bg-red-50 border-l-4 border-red-400 p-6 rounded-r-lg my-8">
+                        <h4 class="!mt-0 !text-red-800">The Combinatorial Explosion</h4>
+                        <p class="!text-red-700">Even with a constrained DSL of 100 primitives, the number of possible programs grows exponentially:</p>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4 text-center">
+                            <div class="bg-white p-3 rounded">
+                                <div class="font-bold text-lg">100</div>
+                                <div class="text-sm">Length 1</div>
+                            </div>
+                            <div class="bg-white p-3 rounded">
+                                <div class="font-bold text-lg">10K</div>
+                                <div class="text-sm">Length 2</div>
+                            </div>
+                            <div class="bg-white p-3 rounded">
+                                <div class="font-bold text-lg">1M</div>
+                                <div class="text-sm">Length 3</div>
+                            </div>
+                            <div class="bg-white p-3 rounded">
+                                <div class="font-bold text-lg">100M</div>
+                                <div class="text-sm">Length 4</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h4>Beyond Brute Force: Intelligent Search Strategies</h4>
+                    <p>Modern ARC solvers employ sophisticated search algorithms to navigate the vast program space efficiently:</p>
+                    <div class="grid md:grid-cols-2 gap-6 my-6">
+                        <div class="bg-white p-6 rounded-lg border">
+                            <h5 class="!mt-0 !mb-3 font-semibold">🎯 Classic & Modern Search</h5>
+                            <ul class="text-sm space-y-2">
+                                <li><strong>Monte Carlo Tree Search (MCTS):</strong> Balances exploration and exploitation to find promising program paths.</li>
+                                <li><strong>Adaptive Branching MCTS (AB-MCTS):</strong> An advanced variant from Sakana AI that adaptively decides whether to search deeper (refine) or wider (explore).</li>
+                                <li><strong>Beam Search & Heuristic Search:</strong> Methods that use rules of thumb or maintain multiple candidate programs to guide search toward likely solutions.</li>
+                            </ul>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg border">
+                            <h5 class="!mt-0 !mb-3 font-semibold">🧠 Neural Guidance</h5>
+                            <ul class="text-sm space-y-2">
+                                <li><strong>GridCoder:</strong> Uses a Transformer to predict the most likely sequence of DSL primitives, guiding the search probabilistically.</li>
+                                <li><strong>Execution-Guided Search:</strong> A neural network learns a distance metric between grids to evaluate which intermediate step is "closest" to the goal.</li>
+                                <li><strong>Learning Program Space (LPS):</strong> The main GridCoder approach where a model predicts the final program directly.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <p>The most significant advance is using neural networks to guide the search process. This moves from a model of "search as enumeration" to "search as learned intuition," which is far more efficient and mirrors human problem-solving.</p>
+                </section>
+
+                <section id="tta" class="pt-16">
+                    <h3>Test-Time Adaptation: The Modern Paradigm</h3>
+                    <p>While program synthesis was dominant early on, the most significant breakthroughs in 2024 came from <strong>Test-Time Adaptation (TTA)</strong>. This strategy, where a model dynamically adapts itself at the moment of inference using the task's own demonstration examples, was a necessary component of every top-performing solution.</p>
+
+                    <p>TTA is a broad category that includes two main sub-strategies: Test-Time Scaling (TTS), which allocates more compute without changing model weights, and Test-Time Training (TTT), which temporarily fine-tunes the model.</p>
+                    
+                    <h4>Test-Time Scaling (TTS)</h4>
+                    <p>TTS refers to improving performance by allocating more computational resources at inference time, <i>without</i> changing the model's weights. This can range from simple techniques like repeated sampling to more complex search procedures like chain-of-thought synthesis or Sakana AI's advanced <b>Adaptive Branching Monte Carlo Tree Search (AB-MCTS)</b>.</p>
+
+                    <h4>Test-Time Training (TTT)</h4>
+                    <p>TTT is a powerful technique where a model's parameters are temporarily updated via gradient descent at inference time. The model is briefly fine-tuned on the few demonstration pairs of the specific task it is trying to solve. This was pioneered for ARC by researchers at MIT and became the basis for several top-scoring 2024 solutions.</p>
+                    
+                    <div class="my-8 bg-white p-8 rounded-xl shadow-lg border">
+                        <h4 class="!mt-0 text-center font-bold text-slate-800 !mb-8">The Test-Time Training (TTT) Workflow</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                            <div class="text-center">
+                                <div class="step-number">1</div>
+                                <h5 class="!mt-0 !mb-2 font-semibold">Get Task</h5>
+                                <p class="text-sm text-slate-600">Receive a novel ARC task with a few train/test examples.</p>
+                            </div>
+                            <div class="text-center">
+                                <div class="step-number">2</div>
+                                <h5 class="!mt-0 !mb-2 font-semibold">Augment Data</h5>
+                                <p class="text-sm text-slate-600">Expand the small demo set using symmetries (rotations, flips, color swaps) to create a temporary training set.</p>
+                            </div>
+                            <div class="text-center">
+                                <div class="step-number">3</div>
+                                <h5 class="!mt-0 !mb-2 font-semibold">Train LoRA</h5>
+                                <p class="text-sm text-slate-600">Rapidly fine-tune a small LoRA adapter on the augmented data, leaving the base model frozen for efficiency.</p>
+                            </div>
+                            <div class="text-center">
+                                <div class="step-number">4</div>
+                                <h5 class="!mt-0 !mb-2 font-semibold">Infer & Ensemble</h5>
+                                <p class="text-sm text-slate-600">Predict the output. Often done under multiple augmentations and combined via majority vote for robustness.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <section id="duality" class="pt-16">
+                    <h3>The Duality of Induction and Transduction</h3>
+                    <p>A fundamental duality in problem-solving strategies has become apparent in ARC research, formalized in the prize-winning paper by Li et al. Understanding this is key to building a top-tier solver, as the best solutions are ensembles that combine both approaches.</p>
+                    
+                    <div class="grid md:grid-cols-2 gap-8 my-8">
+                        <div class="bg-blue-50 p-6 rounded-lg border border-blue-200">
+                            <h4 class="!mt-0 font-bold text-blue-800">🔍 Induction (Program Synthesis)</h4>
+                            <p class="!text-blue-700">The <strong>System 2</strong>, deliberate reasoning path. First infer an explicit program <code>f</code> that explains the examples, then apply it. <code>y_test = f(x_test)</code></p>
+                            <div class="mt-4 p-3 bg-white rounded border">
+                                <p class="!mb-0 text-sm"><strong>Excels at:</strong> Tasks requiring precision, multi-step logic, compositionality, and explicit computation.</p>
+                            </div>
+                        </div>
+                        <div class="bg-green-50 p-6 rounded-lg border border-green-200">
+                            <h4 class="!mt-0 font-bold text-green-800">⚡ Transduction (Direct Prediction)</h4>
+                            <p class="!text-green-700">The <strong>System 1</strong>, intuitive path. Directly predict <code>y_test</code> by considering all examples at once, without necessarily forming an intermediate program. Test-Time Training is a primarily transductive method.</p>
+                            <div class="mt-4 p-3 bg-white rounded border">
+                                <p class="!mb-0 text-sm"><strong>Excels at:</strong> Tasks relying on "fuzzy" perception, pattern completion, and holistic transformations.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <blockquote class="!border-l-4 !border-purple-400 !bg-purple-50 !p-6 !rounded-r-lg">
+                        <p class="!mb-0 !text-purple-800 font-medium">The very best ARC solutions are <strong>ensembles</strong> that combine both inductive and transductive methods, mirroring the dual-process models of human cognition.</p>
+                    </blockquote>
+                </section>
+
+                <div class="section-divider"></div>
+
+                <section id="first-solver" class="pt-16">
+                    <h2>Part III: Practical Guide</h2>
+                    
+                    <div class="code-preview text-white p-8 rounded-xl mb-8">
+                        <div class="flex flex-col md:flex-row items-center gap-8">
+                            <div class="flex-1">
+                                <h3 class="!mt-0 !mb-4 !text-white text-2xl font-bold">Your First ARC Solver: A Step-by-Step Tutorial</h3>
+                                <p class="!text-white/90 !mb-6">This section provides a hands-on tutorial for building a simple, yet complete, ARC solver in Python. We'll use a minimal DSL and simple brute-force search to demonstrate the core logic of the inductive programming paradigm.</p>
+                                <div class="flex flex-wrap gap-3">
+                                    <span class="bg-white/20 px-3 py-1 rounded-full text-sm">🐍 Python</span>
+                                    <span class="bg-white/20 px-3 py-1 rounded-full text-sm">🔧 DSL</span>
+                                    <span class="bg-white/20 px-3 py-1 rounded-full text-sm">🔍 Search</span>
+                                    <span class="bg-white/20 px-3 py-1 rounded-full text-sm">📊 Visualization</span>
+                                </div>
+                            </div>
+                            <div class="flex-shrink-0">
+                                <div class="w-32 h-32 bg-white/10 rounded-xl flex items-center justify-center">
+                                    <span class="text-6xl">💻</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-lg border overflow-hidden">
+                        <div class="bg-slate-100 p-4 border-b">
+                            <div id="code-tabs" class="flex space-x-1">
+                                <button class="tab-btn px-4 py-2 text-sm font-semibold rounded-t-lg text-slate-600 hover:text-slate-800 active" data-target="tab-overview">📋 Overview</button>
+                                <button class="tab-btn px-4 py-2 text-sm font-semibold rounded-t-lg text-slate-600 hover:text-slate-800" data-target="tab-setup">⚙️ Setup</button>
+                                <button class="tab-btn px-4 py-2 text-sm font-semibold rounded-t-lg text-slate-600 hover:text-slate-800" data-target="tab-visualize">📊 Visualize</button>
+                                <button class="tab-btn px-4 py-2 text-sm font-semibold rounded-t-lg text-slate-600 hover:text-slate-800" data-target="tab-solver">🧠 Solver</button>
+                                <button class="tab-btn px-4 py-2 text-sm font-semibold rounded-t-lg text-slate-600 hover:text-slate-800" data-target="tab-run">🚀 Run</button>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <div id="tab-overview" class="tab-content active">
+                                <h4 class="!mt-0 !mb-4">Building Your First ARC Solver</h4>
+                                <div class="grid md:grid-cols-2 gap-6">
+                                    <div>
+                                        <h5 class="!mt-0 !mb-3 font-semibold">What We'll Build</h5>
+                                        <ul class="space-y-2 text-sm">
+                                            <li class="flex items-center"><span class="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>A minimal Domain-Specific Language (DSL)</li>
+                                            <li class="flex items-center"><span class="w-2 h-2 bg-green-500 rounded-full mr-3"></span>A brute-force search algorithm</li>
+                                            <li class="flex items-center"><span class="w-2 h-2 bg-purple-500 rounded-full mr-3"></span>Grid visualization tools</li>
+                                            <li class="flex items-center"><span class="w-2 h-2 bg-orange-500 rounded-full mr-3"></span>A complete end-to-end solver</li>
+                                        </ul>
+                                    </div>
+                                    <div>
+                                        <h5 class="!mt-0 !mb-3 font-semibold">Learning Objectives</h5>
+                                        <ul class="space-y-2 text-sm">
+                                            <li class="flex items-center"><span class="w-2 h-2 bg-teal-500 rounded-full mr-3"></span>Understand the program synthesis approach</li>
+                                            <li class="flex items-center"><span class="w-2 h-2 bg-red-500 rounded-full mr-3"></span>Learn how DSLs constrain search space</li>
+                                            <li class="flex items-center"><span class="w-2 h-2 bg-yellow-500 rounded-full mr-3"></span>Implement search and verification logic</li>
+                                            <li class="flex items-center"><span class="w-2 h-2 bg-pink-500 rounded-full mr-3"></span>Create submission-ready output</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                                    <p class="!mb-0 text-sm text-blue-800"><strong>💡 Pro Tip:</strong> This tutorial demonstrates the core concepts. Real competitive solvers use much larger DSLs, smarter search algorithms, and neural guidance!</p>
+                                </div>
+                            </div>
+                            
+                            <div id="tab-setup" class="tab-content">
+                                <h4 class="!mt-0 !mb-4">1. Setting Up Your Environment</h4>
+                                <p class="!mb-4">First, let's prepare your development environment with the necessary data and libraries.</p>
+                                <div class="bg-slate-900 rounded-lg p-4 font-mono text-sm">
+                                    <div class="flex items-center mb-3">
+                                        <div class="flex space-x-2">
+                                            <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                                            <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                                            <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                                        </div>
+                                        <div class="ml-4 text-slate-400 text-xs">terminal</div>
+                                    </div>
+                                    <pre class="text-slate-200 leading-relaxed"><code># Clone the ARC-AGI repository for the data
+git clone https://github.com/fchollet/ARC-AGI.git
+
+# Install necessary libraries
+pip install numpy matplotlib
+
+# Create project structure
+mkdir arc_solver
+cd arc_solver</code></pre>
+                                </div>
+                                <div class="mt-4 p-4 bg-green-50 rounded-lg border border-green-200">
+                                    <h5 class="!mt-0 !mb-2 font-semibold text-green-800">Project Structure</h5>
+                                    <pre class="text-sm text-green-700"><code>arc_solver/
+├── ARC-AGI/          # The cloned repository
+├── solver.py         # Our main solver script
+└── visualize.py      # A utility for plotting grids</code></pre>
+                                </div>
+                            </div>
+                            
+                            <div id="tab-visualize" class="tab-content">
+                                <h4 class="!mt-0 !mb-4">2. Loading and Visualizing Data</h4>
+                                <p class="!mb-4">Visualizing the tasks is essential for understanding and debugging. Create a file visualize.py:</p>
+                                <div class="bg-slate-900 rounded-lg p-4 font-mono text-sm">
+                                    <div class="flex items-center mb-3">
+                                        <div class="flex space-x-2">
+                                            <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                                            <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                                            <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                                        </div>
+                                        <div class="ml-4 text-slate-400 text-xs">visualize.py</div>
+                                    </div>
+                                    <pre class="text-slate-200 leading-relaxed text-xs"><code><span class="text-slate-500"># In visualize.py</span>
+<span class="text-purple-400">import</span> <span class="text-green-400">matplotlib.pyplot</span> <span class="text-purple-400">as</span> <span class="text-blue-400">plt</span>
+<span class="text-purple-400">from</span> <span class="text-green-400">matplotlib</span> <span class="text-purple-400">import</span> <span class="text-blue-400">colors</span>
+<span class="text-purple-400">import</span> <span class="text-green-400">numpy</span> <span class="text-purple-400">as</span> <span class="text-blue-400">np</span>
+
+<span class="text-slate-500"># Define the 10 official ARC colors</span>
+<span class="text-blue-400">ARC_COLORMAP</span> <span class="text-slate-400">=</span> <span class="text-green-400">colors</span><span class="text-slate-400">.</span><span class="text-yellow-400">ListedColormap</span><span class="text-slate-400">([</span>
+    <span class="text-orange-400">'#000000'</span><span class="text-slate-400">,</span> <span class="text-orange-400">'#0074D9'</span><span class="text-slate-400">,</span> <span class="text-orange-400">'#FF4136'</span><span class="text-slate-400">,</span> <span class="text-orange-400">'#2ECC40'</span><span class="text-slate-400">,</span> <span class="text-orange-400">'#FFDC00'</span><span class="text-slate-400">,</span>
+    <span class="text-orange-400">'#AAAAAA'</span><span class="text-slate-400">,</span> <span class="text-orange-400">'#F012BE'</span><span class="text-slate-400">,</span> <span class="text-orange-400">'#FF851B'</span><span class="text-slate-400">,</span> <span class="text-orange-400">'#7FDBFF'</span><span class="text-slate-400">,</span> <span class="text-orange-400">'#870C25'</span>
+<span class="text-slate-400">])</span>
+
+<span class="text-purple-400">def</span> <span class="text-yellow-400">plot_grid</span><span class="text-slate-400">(</span><span class="text-blue-400">ax</span><span class="text-slate-400">,</span> <span class="text-blue-400">grid</span><span class="text-slate-400">,</span> <span class="text-blue-400">title</span><span class="text-slate-400">=</span><span class="text-orange-400">""</span><span class="text-slate-400">):</span>
+    <span class="text-orange-400">"""Plots a single ARC grid with the official colormap."""</span>
+    <span class="text-blue-400">norm</span> <span class="text-slate-400">=</span> <span class="text-green-400">colors</span><span class="text-slate-400">.</span><span class="text-yellow-400">Normalize</span><span class="text-slate-400">(</span><span class="text-purple-400">vmin</span><span class="text-slate-400">=</span><span class="text-orange-400">0</span><span class="text-slate-400">,</span> <span class="text-purple-400">vmax</span><span class="text-slate-400">=</span><span class="text-orange-400">9</span><span class="text-slate-400">)</span>
+    <span class="text-blue-400">ax</span><span class="text-slate-400">.</span><span class="text-yellow-400">imshow</span><span class="text-slate-400">(</span><span class="text-green-400">np</span><span class="text-slate-400">.</span><span class="text-yellow-400">array</span><span class="text-slate-400">(</span><span class="text-blue-400">grid</span><span class="text-slate-400">),</span> <span class="text-purple-400">cmap</span><span class="text-slate-400">=</span><span class="text-blue-400">ARC_COLORMAP</span><span class="text-slate-400">,</span> <span class="text-purple-400">norm</span><span class="text-slate-400">=</span><span class="text-blue-400">norm</span><span class="text-slate-400">)</span>
+    <span class="text-blue-400">ax</span><span class="text-slate-400">.</span><span class="text-yellow-400">grid</span><span class="text-slate-400">(</span><span class="text-orange-400">True</span><span class="text-slate-400">,</span> <span class="text-purple-400">which</span><span class="text-slate-400">=</span><span class="text-orange-400">'both'</span><span class="text-slate-400">,</span> <span class="text-purple-400">color</span><span class="text-slate-400">=</span><span class="text-orange-400">'white'</span><span class="text-slate-400">,</span> <span class="text-purple-400">linewidth</span><span class="text-slate-400">=</span><span class="text-orange-400">0.5</span><span class="text-slate-400">)</span>
+    <span class="text-blue-400">ax</span><span class="text-slate-400">.</span><span class="text-yellow-400">set_xticks</span><span class="text-slate-400">(</span><span class="text-green-400">np</span><span class="text-slate-400">.</span><span class="text-yellow-400">arange</span><span class="text-slate-400">(</span><span class="text-orange-400">-0.5</span><span class="text-slate-400">,</span> <span class="text-green-400">len</span><span class="text-slate-400">(</span><span class="text-blue-400">grid</span><span class="text-slate-400">[</span><span class="text-orange-400">0</span><span class="text-slate-400">]),</span> <span class="text-orange-400">1</span><span class="text-slate-400">),</span> <span class="text-purple-400">minor</span><span class="text-slate-400">=</span><span class="text-orange-400">True</span><span class="text-slate-400">)</span>
+    <span class="text-blue-400">ax</span><span class="text-slate-400">.</span><span class="text-yellow-400">set_yticks</span><span class="text-slate-400">(</span><span class="text-green-400">np</span><span class="text-slate-400">.</span><span class="text-yellow-400">arange</span><span class="text-slate-400">(</span><span class="text-orange-400">-0.5</span><span class="text-slate-400">,</span> <span class="text-green-400">len</span><span class="text-slate-400">(</span><span class="text-blue-400">grid</span><span class="text-slate-400">),</span> <span class="text-orange-400">1</span><span class="text-slate-400">),</span> <span class="text-purple-400">minor</span><span class="text-slate-400">=</span><span class="text-orange-400">True</span><span class="text-slate-400">)</span>
+    <span class="text-blue-400">ax</span><span class="text-slate-400">.</span><span class="text-yellow-400">set_xticklabels</span><span class="text-slate-400">([])</span>
+    <span class="text-blue-400">ax</span><span class="text-slate-400">.</span><span class="text-yellow-400">set_yticklabels</span><span class="text-slate-400">([])</span>
+    <span class="text-blue-400">ax</span><span class="text-slate-400">.</span><span class="text-yellow-400">set_title</span><span class="text-slate-400">(</span><span class="text-blue-400">title</span><span class="text-slate-400">)</span>
+
+<span class="text-purple-400">def</span> <span class="text-yellow-400">plot_task</span><span class="text-slate-400">(</span><span class="text-blue-400">task</span><span class="text-slate-400">):</span>
+    <span class="text-orange-400">"""Plots all training and test pairs for a given ARC task."""</span>
+    <span class="text-blue-400">num_train</span> <span class="text-slate-400">=</span> <span class="text-green-400">len</span><span class="text-slate-400">(</span><span class="text-blue-400">task</span><span class="text-slate-400">[</span><span class="text-orange-400">'train'</span><span class="text-slate-400">])</span>
+    <span class="text-blue-400">num_test</span> <span class="text-slate-400">=</span> <span class="text-green-400">len</span><span class="text-slate-400">(</span><span class="text-blue-400">task</span><span class="text-slate-400">[</span><span class="text-orange-400">'test'</span><span class="text-slate-400">])</span>
+    <span class="text-blue-400">num_total</span> <span class="text-slate-400">=</span> <span class="text-blue-400">num_train</span> <span class="text-slate-400">+</span> <span class="text-blue-400">num_test</span>
+    <span class="text-blue-400">fig</span><span class="text-slate-400">,</span> <span class="text-blue-400">axs</span> <span class="text-slate-400">=</span> <span class="text-green-400">plt</span><span class="text-slate-400">.</span><span class="text-yellow-400">subplots</span><span class="text-slate-400">(</span><span class="text-orange-400">2</span><span class="text-slate-400">,</span> <span class="text-blue-400">num_total</span><span class="text-slate-400">,</span> <span class="text-purple-400">figsize</span><span class="text-slate-400">=(</span><span class="text-orange-400">3</span> <span class="text-slate-400">*</span> <span class="text-blue-400">num_total</span><span class="text-slate-400">,</span> <span class="text-orange-400">6</span><span class="text-slate-400">))</span>
+    
+    <span class="text-purple-400">for</span> <span class="text-blue-400">i</span><span class="text-slate-400">,</span> <span class="text-blue-400">pair</span> <span class="text-purple-400">in</span> <span class="text-green-400">enumerate</span><span class="text-slate-400">(</span><span class="text-blue-400">task</span><span class="text-slate-400">[</span><span class="text-orange-400">'train'</span><span class="text-slate-400">]):</span>
+        <span class="text-yellow-400">plot_grid</span><span class="text-slate-400">(</span><span class="text-blue-400">axs</span><span class="text-slate-400">[</span><span class="text-orange-400">0</span><span class="text-slate-400">,</span> <span class="text-blue-400">i</span><span class="text-slate-400">],</span> <span class="text-blue-400">pair</span><span class="text-slate-400">[</span><span class="text-orange-400">'input'</span><span class="text-slate-400">],</span> <span class="text-orange-400">f"Train {i} Input"</span><span class="text-slate-400">)</span>
+        <span class="text-yellow-400">plot_grid</span><span class="text-slate-400">(</span><span class="text-blue-400">axs</span><span class="text-slate-400">[</span><span class="text-orange-400">1</span><span class="text-slate-400">,</span> <span class="text-blue-400">i</span><span class="text-slate-400">],</span> <span class="text-blue-400">pair</span><span class="text-slate-400">[</span><span class="text-orange-400">'output'</span><span class="text-slate-400">],</span> <span class="text-orange-400">f"Train {i} Output"</span><span class="text-slate-400">)</span>
+
+    <span class="text-purple-400">for</span> <span class="text-blue-400">i</span><span class="text-slate-400">,</span> <span class="text-blue-400">pair</span> <span class="text-purple-400">in</span> <span class="text-green-400">enumerate</span><span class="text-slate-400">(</span><span class="text-blue-400">task</span><span class="text-slate-400">[</span><span class="text-orange-400">'test'</span><span class="text-slate-400">]):</span>
+        <span class="text-yellow-400">plot_grid</span><span class="text-slate-400">(</span><span class="text-blue-400">axs</span><span class="text-slate-400">[</span><span class="text-orange-400">0</span><span class="text-slate-400">,</span> <span class="text-blue-400">num_train</span> <span class="text-slate-400">+</span> <span class="text-blue-400">i</span><span class="text-slate-400">],</span> <span class="text-blue-400">pair</span><span class="text-slate-400">[</span><span class="text-orange-400">'input'</span><span class="text-slate-400">],</span> <span class="text-orange-400">f"Test {i} Input"</span><span class="text-slate-400">)</span>
+        <span class="text-purple-400">if</span> <span class="text-orange-400">'output'</span> <span class="text-purple-400">in</span> <span class="text-blue-400">pair</span><span class="text-slate-400">:</span>
+            <span class="text-yellow-400">plot_grid</span><span class="text-slate-400">(</span><span class="text-blue-400">axs</span><span class="text-slate-400">[</span><span class="text-orange-400">1</span><span class="text-slate-400">,</span> <span class="text-blue-400">num_train</span> <span class="text-slate-400">+</span> <span class="text-blue-400">i</span><span class="text-slate-400">],</span> <span class="text-blue-400">pair</span><span class="text-slate-400">[</span><span class="text-orange-400">'output'</span><span class="text-slate-400">],</span> <span class="text-orange-400">f"Test {i} Output"</span><span class="text-slate-400">)</span>
+        <span class="text-purple-400">else</span><span class="text-slate-400">:</span>
+            <span class="text-blue-400">axs</span><span class="text-slate-400">[</span><span class="text-orange-400">1</span><span class="text-slate-400">,</span> <span class="text-blue-400">num_train</span> <span class="text-slate-400">+</span> <span class="text-blue-400">i</span><span class="text-slate-400">].</span><span class="text-yellow-400">axis</span><span class="text-slate-400">(</span><span class="text-orange-400">'off'</span><span class="text-slate-400">)</span>
+            <span class="text-blue-400">axs</span><span class="text-slate-400">[</span><span class="text-orange-400">1</span><span class="text-slate-400">,</span> <span class="text-blue-400">num_train</span> <span class="text-slate-400">+</span> <span class="text-blue-400">i</span><span class="text-slate-400">].</span><span class="text-yellow-400">set_title</span><span class="text-slate-400">(</span><span class="text-orange-400">f"Test {i} Output (Predict)"</span><span class="text-slate-400">)</span>
+    
+    <span class="text-green-400">plt</span><span class="text-slate-400">.</span><span class="text-yellow-400">tight_layout</span><span class="text-slate-400">()</span>
+    <span class="text-green-400">plt</span><span class="text-slate-400">.</span><span class="text-yellow-400">show</span><span class="text-slate-400">()</span></code></pre>
+                                </div>
+                                <p class="!mt-4 !mb-4">You can now load and view a task in your main script, solver.py:</p>
+                                <div class="bg-slate-900 rounded-lg p-4 font-mono text-sm">
+                                    <div class="flex items-center mb-3">
+                                        <div class="flex space-x-2">
+                                            <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                                            <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                                            <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                                        </div>
+                                        <div class="ml-4 text-slate-400 text-xs">solver.py</div>
+                                    </div>
+                                    <pre class="text-slate-200 leading-relaxed text-xs"><code><span class="text-slate-500"># In solver.py</span>
+<span class="text-purple-400">import</span> <span class="text-green-400">json</span>
+<span class="text-purple-400">from</span> <span class="text-green-400">visualize</span> <span class="text-purple-400">import</span> <span class="text-blue-400">plot_task</span>
+
+<span class="text-purple-400">def</span> <span class="text-yellow-400">load_task</span><span class="text-slate-400">(</span><span class="text-blue-400">task_path</span><span class="text-slate-400">):</span>
+    <span class="text-purple-400">with</span> <span class="text-green-400">open</span><span class="text-slate-400">(</span><span class="text-blue-400">task_path</span><span class="text-slate-400">,</span> <span class="text-orange-400">'r'</span><span class="text-slate-400">)</span> <span class="text-purple-400">as</span> <span class="text-blue-400">f</span><span class="text-slate-400">:</span>
+        <span class="text-purple-400">return</span> <span class="text-green-400">json</span><span class="text-slate-400">.</span><span class="text-yellow-400">load</span><span class="text-slate-400">(</span><span class="text-blue-400">f</span><span class="text-slate-400">)</span>
+
+<span class="text-slate-500"># Example usage</span>
+<span class="text-blue-400">task_file</span> <span class="text-slate-400">=</span> <span class="text-orange-400">'ARC-AGI/data/training/007bbfb7.json'</span>
+<span class="text-blue-400">task</span> <span class="text-slate-400">=</span> <span class="text-yellow-400">load_task</span><span class="text-slate-400">(</span><span class="text-blue-400">task_file</span><span class="text-slate-400">)</span>
+<span class="text-slate-500"># plot_task(task)  # Uncomment to visualize</span></code></pre>
+                                </div>
+                            </div>
+                            
+                            <div id="tab-solver" class="tab-content">
+                                <h4 class="!mt-0 !mb-4">3. Building a Simple DSL Solver</h4>
+                                <p class="!mb-4">Now, let's build the core solver logic.</p>
+                                
+                                <h5 class="!mt-6 !mb-3 font-semibold">Step 1: Define a Minimal DSL</h5>
+                                <p class="!mb-4">Create a few simple functions that operate on grids (represented as NumPy arrays).</p>
+                                <div class="bg-slate-900 rounded-lg p-4 font-mono text-sm">
+                                    <div class="flex items-center mb-3">
+                                        <div class="flex space-x-2">
+                                            <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                                            <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                                            <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                                        </div>
+                                        <div class="ml-4 text-slate-400 text-xs">solver.py</div>
+                                    </div>
+                                    <pre class="text-slate-200 leading-relaxed text-xs"><code><span class="text-slate-500"># In solver.py</span>
+<span class="text-purple-400">import</span> <span class="text-green-400">numpy</span> <span class="text-purple-400">as</span> <span class="text-blue-400">np</span>
+
+<span class="text-purple-400">def</span> <span class="text-yellow-400">dsl_rotate_90</span><span class="text-slate-400">(</span><span class="text-blue-400">grid</span><span class="text-slate-400">):</span>
+    <span class="text-purple-400">return</span> <span class="text-green-400">np</span><span class="text-slate-400">.</span><span class="text-yellow-400">rot90</span><span class="text-slate-400">(</span><span class="text-blue-400">grid</span><span class="text-slate-400">,</span> <span class="text-orange-400">1</span><span class="text-slate-400">)</span>
+
+<span class="text-purple-400">def</span> <span class="text-yellow-400">dsl_flip_horizontal</span><span class="text-slate-400">(</span><span class="text-blue-400">grid</span><span class="text-slate-400">):</span>
+    <span class="text-purple-400">return</span> <span class="text-green-400">np</span><span class="text-slate-400">.</span><span class="text-yellow-400">fliplr</span><span class="text-slate-400">(</span><span class="text-blue-400">grid</span><span class="text-slate-400">)</span>
+
+<span class="text-purple-400">def</span> <span class="text-yellow-400">dsl_flip_vertical</span><span class="text-slate-400">(</span><span class="text-blue-400">grid</span><span class="text-slate-400">):</span>
+    <span class="text-purple-400">return</span> <span class="text-green-400">np</span><span class="text-slate-400">.</span><span class="text-yellow-400">flipud</span><span class="text-slate-400">(</span><span class="text-blue-400">grid</span><span class="text-slate-400">)</span>
+
+<span class="text-slate-500"># Our DSL is a dictionary mapping function names to functions</span>
+<span class="text-blue-400">DSL</span> <span class="text-slate-400">=</span> <span class="text-slate-400">{</span>
+    <span class="text-orange-400">'rotate_90'</span><span class="text-slate-400">:</span> <span class="text-blue-400">dsl_rotate_90</span><span class="text-slate-400">,</span>
+    <span class="text-orange-400">'flip_h'</span><span class="text-slate-400">:</span> <span class="text-blue-400">dsl_flip_horizontal</span><span class="text-slate-400">,</span>
+    <span class="text-orange-400">'flip_v'</span><span class="text-slate-400">:</span> <span class="text-blue-400">dsl_flip_vertical</span><span class="text-slate-400">,</span>
+<span class="text-slate-400">}</span></code></pre>
+                                </div>
+                                
+                                <h5 class="!mt-6 !mb-3 font-semibold">Step 2 & 3: Implement a Search and Verification Loop</h5>
+                                <p class="!mb-4">We'll use a simple brute-force search that tries all sequences of DSL functions up to a certain length.</p>
+                                <div class="bg-slate-900 rounded-lg p-4 font-mono text-sm">
+                                    <div class="flex items-center mb-3">
+                                        <div class="flex space-x-2">
+                                            <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                                            <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                                            <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                                        </div>
+                                        <div class="ml-4 text-slate-400 text-xs">solver.py</div>
+                                    </div>
+                                    <pre class="text-slate-200 leading-relaxed text-xs"><code><span class="text-slate-500"># In solver.py</span>
+<span class="text-purple-400">from</span> <span class="text-green-400">itertools</span> <span class="text-purple-400">import</span> <span class="text-blue-400">product</span>
+
+<span class="text-purple-400">def</span> <span class="text-yellow-400">apply_program</span><span class="text-slate-400">(</span><span class="text-blue-400">grid</span><span class="text-slate-400">,</span> <span class="text-blue-400">program</span><span class="text-slate-400">):</span>
+    <span class="text-orange-400">"""Applies a sequence of DSL functions to a grid."""</span>
+    <span class="text-blue-400">current_grid</span> <span class="text-slate-400">=</span> <span class="text-green-400">np</span><span class="text-slate-400">.</span><span class="text-yellow-400">array</span><span class="text-slate-400">(</span><span class="text-blue-400">grid</span><span class="text-slate-400">)</span>
+    <span class="text-purple-400">for</span> <span class="text-blue-400">func_name</span> <span class="text-purple-400">in</span> <span class="text-blue-400">program</span><span class="text-slate-400">:</span>
+        <span class="text-blue-400">current_grid</span> <span class="text-slate-400">=</span> <span class="text-blue-400">DSL</span><span class="text-slate-400">[</span><span class="text-blue-400">func_name</span><span class="text-slate-400">](</span><span class="text-blue-400">current_grid</span><span class="text-slate-400">)</span>
+    <span class="text-purple-400">return</span> <span class="text-blue-400">current_grid</span><span class="text-slate-400">.</span><span class="text-yellow-400">tolist</span><span class="text-slate-400">()</span>
+
+<span class="text-purple-400">def</span> <span class="text-yellow-400">find_program</span><span class="text-slate-400">(</span><span class="text-blue-400">task</span><span class="text-slate-400">,</span> <span class="text-blue-400">max_depth</span><span class="text-slate-400">=</span><span class="text-orange-400">3</span><span class="text-slate-400">):</span>
+    <span class="text-orange-400">"""Searches for a program that solves the task."""</span>
+    <span class="text-blue-400">train_pairs</span> <span class="text-slate-400">=</span> <span class="text-blue-400">task</span><span class="text-slate-400">[</span><span class="text-orange-400">'train'</span><span class="text-slate-400">]</span>
+    
+    <span class="text-slate-500"># Generate all possible programs up to max_depth</span>
+    <span class="text-purple-400">for</span> <span class="text-blue-400">depth</span> <span class="text-purple-400">in</span> <span class="text-green-400">range</span><span class="text-slate-400">(</span><span class="text-orange-400">1</span><span class="text-slate-400">,</span> <span class="text-blue-400">max_depth</span> <span class="text-slate-400">+</span> <span class="text-orange-400">1</span><span class="text-slate-400">):</span>
+        <span class="text-purple-400">for</span> <span class="text-blue-400">program_tuple</span> <span class="text-purple-400">in</span> <span class="text-yellow-400">product</span><span class="text-slate-400">(</span><span class="text-blue-400">DSL</span><span class="text-slate-400">.</span><span class="text-yellow-400">keys</span><span class="text-slate-400">(),</span> <span class="text-purple-400">repeat</span><span class="text-slate-400">=</span><span class="text-blue-400">depth</span><span class="text-slate-400">):</span>
+            <span class="text-blue-400">program</span> <span class="text-slate-400">=</span> <span class="text-green-400">list</span><span class="text-slate-400">(</span><span class="text-blue-400">program_tuple</span><span class="text-slate-400">)</span>
+            <span class="text-blue-400">is_solution</span> <span class="text-slate-400">=</span> <span class="text-orange-400">True</span>
+            <span class="text-slate-500"># Verify the program against all training pairs</span>
+            <span class="text-purple-400">for</span> <span class="text-blue-400">pair</span> <span class="text-purple-400">in</span> <span class="text-blue-400">train_pairs</span><span class="text-slate-400">:</span>
+                <span class="text-blue-400">input_grid</span> <span class="text-slate-400">=</span> <span class="text-blue-400">pair</span><span class="text-slate-400">[</span><span class="text-orange-400">'input'</span><span class="text-slate-400">]</span>
+                <span class="text-blue-400">expected_output</span> <span class="text-slate-400">=</span> <span class="text-blue-400">pair</span><span class="text-slate-400">[</span><span class="text-orange-400">'output'</span><span class="text-slate-400">]</span>
+                <span class="text-blue-400">predicted_output</span> <span class="text-slate-400">=</span> <span class="text-yellow-400">apply_program</span><span class="text-slate-400">(</span><span class="text-blue-400">input_grid</span><span class="text-slate-400">,</span> <span class="text-blue-400">program</span><span class="text-slate-400">)</span>
+                
+                <span class="text-purple-400">if</span> <span class="text-blue-400">predicted_output</span> <span class="text-slate-400">!=</span> <span class="text-blue-400">expected_output</span><span class="text-slate-400">:</span>
+                    <span class="text-blue-400">is_solution</span> <span class="text-slate-400">=</span> <span class="text-orange-400">False</span>
+                    <span class="text-purple-400">break</span>
+            
+            <span class="text-purple-400">if</span> <span class="text-blue-400">is_solution</span><span class="text-slate-400">:</span>
+                <span class="text-green-400">print</span><span class="text-slate-400">(</span><span class="text-orange-400">f"Found solution program: {program}"</span><span class="text-slate-400">)</span>
+                <span class="text-purple-400">return</span> <span class="text-blue-400">program</span>
+    
+    <span class="text-green-400">print</span><span class="text-slate-400">(</span><span class="text-orange-400">"No solution found."</span><span class="text-slate-400">)</span>
+    <span class="text-purple-400">return</span> <span class="text-orange-400">None</span></code></pre>
+                                </div>
+                            </div>
+                            
+                            <div id="tab-run" class="tab-content">
+                                <h4 class="!mt-0 !mb-4">4. Step 4 & 5: Apply to Test Input and Format for Submission</h4>
+                                <p class="!mb-4">Finally, if a program is found, apply it to the test inputs and prepare the submission.json file.</p>
+                                <div class="bg-slate-900 rounded-lg p-4 font-mono text-sm">
+                                    <div class="flex items-center mb-3">
+                                        <div class="flex space-x-2">
+                                            <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                                            <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                                            <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                                        </div>
+                                        <div class="ml-4 text-slate-400 text-xs">solver.py</div>
+                                    </div>
+                                    <pre class="text-slate-200 leading-relaxed text-xs"><code><span class="text-slate-500"># In solver.py</span>
+<span class="text-purple-400">def</span> <span class="text-yellow-400">solve_task</span><span class="text-slate-400">(</span><span class="text-blue-400">task</span><span class="text-slate-400">):</span>
+    <span class="text-orange-400">"""Finds a program and applies it to test inputs."""</span>
+    <span class="text-blue-400">program</span> <span class="text-slate-400">=</span> <span class="text-yellow-400">find_program</span><span class="text-slate-400">(</span><span class="text-blue-400">task</span><span class="text-slate-400">)</span>
+    <span class="text-purple-400">if</span> <span class="text-blue-400">program</span> <span class="text-purple-400">is</span> <span class="text-orange-400">None</span><span class="text-slate-400">:</span>
+        <span class="text-purple-400">return</span> <span class="text-slate-500"># Return empty predictions if no solution found</span>
+    
+    <span class="text-blue-400">predictions</span> <span class="text-slate-400">=</span> <span class="text-slate-400">[]</span>
+    <span class="text-purple-400">for</span> <span class="text-blue-400">pair</span> <span class="text-purple-400">in</span> <span class="text-blue-400">task</span><span class="text-slate-400">[</span><span class="text-orange-400">'test'</span><span class="text-slate-400">]:</span>
+        <span class="text-blue-400">test_input</span> <span class="text-slate-400">=</span> <span class="text-blue-400">pair</span><span class="text-slate-400">[</span><span class="text-orange-400">'input'</span><span class="text-slate-400">]</span>
+        <span class="text-blue-400">predicted_output</span> <span class="text-slate-400">=</span> <span class="text-yellow-400">apply_program</span><span class="text-slate-400">(</span><span class="text-blue-400">test_input</span><span class="text-slate-400">,</span> <span class="text-blue-400">program</span><span class="text-slate-400">)</span>
+        <span class="text-blue-400">predictions</span><span class="text-slate-400">.</span><span class="text-yellow-400">append</span><span class="text-slate-400">(</span><span class="text-blue-400">predicted_output</span><span class="text-slate-400">)</span>
+    <span class="text-purple-400">return</span> <span class="text-blue-400">predictions</span>
+
+<span class="text-purple-400">def</span> <span class="text-yellow-400">main</span><span class="text-slate-400">(</span><span class="text-slate-400">):</span>
+    <span class="text-blue-400">task_file</span> <span class="text-slate-400">=</span> <span class="text-orange-400">'ARC-AGI/data/training/007bbfb7.json'</span> <span class="text-slate-500"># A simple rotation task</span>
+    <span class="text-blue-400">task_id</span> <span class="text-slate-400">=</span> <span class="text-blue-400">task_file</span><span class="text-slate-400">.</span><span class="text-yellow-400">split</span><span class="text-slate-400">(</span><span class="text-orange-400">'/'</span><span class="text-slate-400">)[</span><span class="text-orange-400">-1</span><span class="text-slate-400">].</span><span class="text-yellow-400">replace</span><span class="text-slate-400">(</span><span class="text-orange-400">'.json'</span><span class="text-slate-400">,</span> <span class="text-orange-400">''</span><span class="text-slate-400">)</span>
+    <span class="text-blue-400">task</span> <span class="text-slate-400">=</span> <span class="text-yellow-400">load_task</span><span class="text-slate-400">(</span><span class="text-blue-400">task_file</span><span class="text-slate-400">)</span>
+    
+    <span class="text-blue-400">predictions</span> <span class="text-slate-400">=</span> <span class="text-yellow-400">solve_task</span><span class="text-slate-400">(</span><span class="text-blue-400">task</span><span class="text-slate-400">)</span>
+    
+    <span class="text-slate-500"># Format for submission (simplified for one task)</span>
+    <span class="text-blue-400">submission</span> <span class="text-slate-400">=</span> <span class="text-slate-400">{}</span>
+    <span class="text-purple-400">if</span> <span class="text-blue-400">predictions</span><span class="text-slate-400">:</span>
+        <span class="text-slate-500"># ARC Prize allows multiple attempts, here we just submit one</span>
+        <span class="text-blue-400">submission</span><span class="text-slate-400">[</span><span class="text-blue-400">task_id</span><span class="text-slate-400">]</span> <span class="text-slate-400">=</span> <span class="text-slate-400">[{</span><span class="text-orange-400">'attempt_1'</span><span class="text-slate-400">:</span> <span class="text-blue-400">pred</span><span class="text-slate-400">,</span> <span class="text-orange-400">'attempt_2'</span><span class="text-slate-400">:</span> <span class="text-blue-400">pred</span><span class="text-slate-400">}</span> <span class="text-purple-400">for</span> <span class="text-blue-400">pred</span> <span class="text-purple-400">in</span> <span class="text-blue-400">predictions</span><span class="text-slate-400">]</span>
+
+    <span class="text-purple-400">with</span> <span class="text-green-400">open</span><span class="text-slate-400">(</span><span class="text-orange-400">'submission.json'</span><span class="text-slate-400">,</span> <span class="text-orange-400">'w'</span><span class="text-slate-400">)</span> <span class="text-purple-400">as</span> <span class="text-blue-400">f</span><span class="text-slate-400">:</span>
+        <span class="text-green-400">json</span><span class="text-slate-400">.</span><span class="text-yellow-400">dump</span><span class="text-slate-400">(</span><span class="text-blue-400">submission</span><span class="text-slate-400">,</span> <span class="text-blue-400">f</span><span class="text-slate-400">,</span> <span class="text-purple-400">indent</span><span class="text-slate-400">=</span><span class="text-orange-400">4</span><span class="text-slate-400">)</span>
+    <span class="text-green-400">print</span><span class="text-slate-400">(</span><span class="text-orange-400">"submission.json created."</span><span class="text-slate-400">)</span>
+
+<span class="text-purple-400">if</span> <span class="text-blue-400">__name__</span> <span class="text-slate-400">==</span> <span class="text-orange-400">'__main__'</span><span class="text-slate-400">:</span>
+    <span class="text-yellow-400">main</span><span class="text-slate-400">()</span></code></pre>
+                                </div>
+                                <div class="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                                    <h5 class="!mt-0 !mb-2 font-semibold text-blue-800">📝 Summary</h5>
+                                    <p class="text-sm text-blue-700">This complete script, while only able to solve very simple tasks, demonstrates the end-to-end workflow: load data, define a language, search for a program that explains the data, apply the program to new inputs, and format the output. It provides a solid foundation upon which to build more complex DSLs, more intelligent search algorithms, and eventually integrate neural components.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="validation-pipeline" class="pt-16">
+                    <h3>Building a Robust Validation Pipeline</h3>
+                    <p>Before writing a single line of solver code, the most important step for any serious competitor is to build a robust local validation pipeline. The goal is to create a setup that allows you to reliably estimate your performance on the hidden private test set without deceiving yourself.</p>
+                    <div class="bg-yellow-50 border-l-4 border-yellow-400 p-6 rounded-r-lg my-8">
+                        <h4 class="!mt-0 !text-yellow-800">The Golden Rule of Validation</h4>
+                        <p class="!mb-0 !text-yellow-700 font-medium">Your solver should be developed <i>only</i> on the public training set. The public evaluation set must be treated as a <b>one-shot, holdout set</b> for final validation.</p>
+                    </div>
+                    <ul class="space-y-3">
+                        <li><strong>Mimic Kaggle:</strong> Your pipeline should strictly separate the public training and public evaluation datasets. Your algorithm should never see the evaluation tasks during its development phase.</li>
+                        <li><strong>Avoid Data Leakage:</strong> Repeatedly modifying your algorithm based on its score on the evaluation set, or manually inspecting those tasks to guide development, constitutes data leakage. This will lead to an inflated, unreliable local score that will not translate to the private leaderboard.</li>
+                        <li><strong>One-Shot Execution:</strong> To get your best estimate of true performance, run your final, trained solver on the <i>entire</i> public evaluation set in a single execution. If your solution is computationally expensive, you can build confidence by testing on a random sample of tasks, holding out the rest for a final validation run before a full execution.</li>
+                    </ul>
+                </section>
+                
+                <section id="champions" class="pt-16">
+                    <h3>Deconstructing the Champions: Analysis of Winning Solutions</h3>
+                    <p>To move from a simple solver to a competitive one, it is essential to study the strategies of those who have reached the top of the leaderboards. The open-source nature of the ARC Prize provides an unprecedented opportunity to deconstruct the winning solutions from the 2024 competition.</p>
+                    
+                    <div class="overflow-x-auto my-8">
+                        <table class="min-w-full">
+                            <caption class="text-lg font-semibold mb-4">Selected ARC Prize 2024 Winners and Approaches</caption>
+                            <thead><tr><th>Rank (Category)</th><th>Team / Lead Author</th><th>Score</th><th>Core Approach</th><th>Key Innovation(s)</th></tr></thead>
+                            <tbody>
+                                <tr><th>1st (Kaggle)</th><td>the ARChitects</td><td>53.5%</td><td>LLM-based TTT (Transduction)</td><td>Custom DFS sampling, "Product of Experts" scoring.</td></tr>
+                                <tr><th>2nd (Kaggle)</th><td>G. Barbadillo</td><td>40.0%</td><td>Ensemble (Induction + Transduction)</td><td>Hybrid solver combining DSL search and LLM prediction.</td></tr>
+                                <tr><th>2nd (Paper)</th><td>Akyürek et al.</td><td>61.9% (public)</td><td>LLM-based TTT (Transduction)</td><td>Foundational method for TTT on ARC using LoRA.</td></tr>
+                                <tr><th>Runner-Up (Paper)</th><td>Simon Ouellette</td><td>N/A</td><td>Neurally-Guided Program Synthesis (Induction)</td><td>GridCoder: using a Transformer to guide DSL search.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="space-y-6 my-8">
+                         <div class="interactive-card bg-gradient-to-r from-blue-50 to-blue-100 p-6 rounded-lg border border-blue-200 cursor-pointer" data-details="The winning solution is a masterclass in the <strong>transductive</strong> paradigm via Test-Time Training. It uses a fine-tuned LLM that adapts to each task. Their key innovations were:<br><br><strong>1) Custom Tokenization:</strong> They shrank the LLM's vocabulary to just 64 essential tokens to prevent token-merging artifacts and focus the model's capacity on grid logic.<br><br><strong>2) Custom Depth-First Search (DFS) Sampling:</strong> Instead of standard sampling, they used DFS to systematically explore the space of possible output grids, generating a diverse set of high-probability candidates.<br><br><strong>3) 'Product of Experts' Scoring:</strong> Their most novel contribution. To select the best candidate, they used the LLM itself as a judge, re-evaluating each candidate's probability from multiple 'perspectives' (geometric augmentations). The final score was the product of these probabilities, strongly rewarding robust and logically consistent solutions.<br><br><a href='https://arxiv.org/pdf/2505.07859v1' target='_blank' rel='noopener noreferrer' class='block mt-4 p-3 bg-white rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors flex items-center'><span class='mr-3 text-lg'>📄</span><span class='font-semibold text-slate-700'>Read the full paper</span></a><a href='https://params.com/@the-architects/arc-prize-2024' target='_blank' rel='noopener noreferrer' class='block mt-2 p-3 bg-white rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors flex items-center'><span class='mr-3 text-lg'>💻</span><span class='font-semibold text-slate-700'>View the winning solution</span></a>">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h4 class="!mt-0 !mb-2 font-bold text-blue-800">🏆 1st Place: the ARChitects</h4>
+                                    <p class="font-semibold text-blue-600 !mb-2">Core Approach: LLM-based TTT (Transduction)</p>
+                                    <p class="text-sm text-blue-700">Advanced TTT with custom sampling and "Product of Experts" scoring</p>
+                                </div>
+                                <div class="text-blue-400 text-2xl">→</div>
+                            </div>
+                            <div class="details hidden mt-4 text-sm bg-white p-4 rounded-md border border-blue-200"></div>
+                        </div>
+                        
+                        <div class="interactive-card bg-gradient-to-r from-green-50 to-green-100 p-6 rounded-lg border border-green-200 cursor-pointer" data-details="While the ARChitects won the competition, this paper from Akyürek et al. at MIT laid the theoretical and practical groundwork for the TTT paradigm on ARC. Their method, using <strong>LoRA</strong> for efficient fine-tuning and heavy <strong>data augmentation</strong> (especially geometric symmetries), was the first to achieve average human-level performance on the public validation set when ensembled.<br><br>Their paper is the essential reference for implementing a TTT-based solver, providing a clear, replicable methodology for the entire workflow.<br><br><a href='https://ekinakyurek.github.io/papers/ttt.pdf' target='_blank' rel='noopener noreferrer' class='block mt-4 p-3 bg-white rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors flex items-center'><span class='mr-3 text-lg'>📄</span><span class='font-semibold text-slate-700'>Read the full paper here</span></a>">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h4 class="!mt-0 !mb-2 font-bold text-green-800">📚 2nd Paper: Akyürek et al.</h4>
+                                    <p class="font-semibold text-green-600 !mb-2">Core Approach: The TTT Pioneers (Transduction)</p>
+                                    <p class="text-sm text-green-700">Foundational TTT methodology with LoRA and data augmentation</p>
+                                </div>
+                                <div class="text-green-400 text-2xl">→</div>
+                            </div>
+                            <div class="details hidden mt-4 text-sm bg-white p-4 rounded-md border border-green-200"></div>
+                        </div>
+                        
+                        <div class="interactive-card bg-gradient-to-r from-purple-50 to-purple-100 p-6 rounded-lg border border-purple-200 cursor-pointer" data-details="Representing the <strong>inductive</strong> side of ARC-solving, GridCoder presents a powerful alternative to the LLM-dominant paradigm. It uses a smaller, specialized Transformer model, trained from scratch, to guide a search algorithm through a DSL program space.<br><br>This approach is significant because it shows a path to high performance that doesn't depend on massive, pre-trained LLMs. It demonstrates a compelling research direction focused on computational efficiency, interpretability, and systematic generalization through neurally-guided symbolic reasoning.<br><br><a href='https://arxiv.org/pdf/2411.17708v1' target='_blank' rel='noopener noreferrer' class='block mt-4 p-3 bg-white rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors flex items-center'><span class='mr-3 text-lg'>📄</span><span class='font-semibold text-slate-700'>Read the full paper</span></a><a href='https://github.com/SimonOuellette35/GridCoder2024' target='_blank' rel='noopener noreferrer' class='block mt-2 p-3 bg-white rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors flex items-center'><span class='mr-3 text-lg'>💻</span><span class='font-semibold text-slate-700'>Explore the code on GitHub</span></a>">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h4 class="!mt-0 !mb-2 font-bold text-purple-800">🧠 Runner-Up: Simon Ouellette (GridCoder)</h4>
+                                    <p class="font-semibold text-purple-600 !mb-2">Core Approach: Neurally-Guided Program Synthesis (Induction)</p>
+                                    <p class="text-sm text-purple-700">Specialized Transformer guiding DSL search for efficient induction</p>
+                                </div>
+                                <div class="text-purple-400 text-2xl">→</div>
+                            </div>
+                            <div class="details hidden mt-4 text-sm bg-white p-4 rounded-md border border-purple-200"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="strategies" class="pt-16">
+                    <h3>Charting Your Course: Strategies for ARC Prize 2025</h3>
+                    <p>Armed with an understanding of ARC's philosophy, methodologies, and winning strategies, you can now chart a course for tackling the ARC Prize 2025. Success will require a combination of solid engineering, strategic thinking, and novel ideas.</p>
+                    
+                    <h4>Choosing Your Path: Hybridization and Specialization</h4>
+                    <p>The results from 2024 send a clear message: no single approach currently solves all ARC tasks. The state-of-the-art is a hybrid. A highly effective strategy for a new competitor would be:</p>
+                    
+                    <div class="grid md:grid-cols-3 gap-6 my-8">
+                        <div class="bg-blue-50 p-6 rounded-lg border border-blue-200 text-center">
+                            <div class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl font-bold">1</div>
+                            <h5 class="!mt-0 !mb-3 font-bold text-blue-800">Build a Strong Transductive Baseline</h5>
+                            <p class="text-sm text-blue-700">Start by implementing a robust Test-Time Training (TTT) solver based on the work of the ARChitects and Akyürek et al.</p>
+                        </div>
+                        <div class="bg-green-50 p-6 rounded-lg border border-green-200 text-center">
+                            <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl font-bold">2</div>
+                            <h5 class="!mt-0 !mb-3 font-bold text-green-800">Develop a Specialized Inductive Solver</h5>
+                            <p class="text-sm text-green-700">Concurrently, build or adapt a DSL-based program synthesis solver. This could be based on Michael Hodel's DSL or a neurally-guided approach like GridCoder.</p>
+                        </div>
+                        <div class="bg-purple-50 p-6 rounded-lg border border-purple-200 text-center">
+                            <div class="w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl font-bold">3</div>
+                            <h5 class="!mt-0 !mb-3 font-bold text-purple-800">Create an Ensemble</h5>
+                            <p class="text-sm text-purple-700">Design a meta-solver that runs both your transductive and inductive systems on each task and develops heuristics to choose which solution to submit.</p>
+                        </div>
+                    </div>
+
+                    <h4>The Frontier: Where Do New Ideas Come From?</h4>
+                    <p>Simply re-implementing 2024 solutions is unlikely to win the Grand Prize on ARC-AGI-2. Your strategic focus should be on creating novel solutions for the known weaknesses of today's systems—the very challenges ARC-AGI-2 was built to test:</p>
+                    
+                    <div class="grid md:grid-cols-3 gap-6 my-8">
+                        <div class="bg-red-50 p-6 rounded-lg border border-red-200">
+                            <h5 class="!mt-0 !mb-3 font-bold text-red-800">🔍 Symbolic Interpretation</h5>
+                            <p class="text-sm text-red-700">Understanding that pixels can <em>represent</em> an action or concept, rather than just being a pattern to transform.</p>
+                        </div>
+                        <div class="bg-orange-50 p-6 rounded-lg border border-orange-200">
+                            <h5 class="!mt-0 !mb-3 font-bold text-orange-800">🧩 Compositional Reasoning</h5>
+                            <p class="text-sm text-orange-700">Discovering and applying multiple, interacting rules simultaneously, especially when those rules interact with each other.</p>
+                        </div>
+                        <div class="bg-yellow-50 p-6 rounded-lg border border-yellow-200">
+                            <h5 class="!mt-0 !mb-3 font-bold text-yellow-800">🎯 Contextual Rule Application</h5>
+                            <p class="text-sm text-yellow-700">Recognizing the context that determines which rule to apply, moving beyond superficial global patterns.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-gradient-to-r from-blue-50 via-purple-50 to-green-50 p-8 rounded-xl my-8 border border-slate-200">
+                        <div class="text-center mb-6">
+                            <h4 class="!mt-0 !mb-4 text-slate-800 text-2xl font-bold">🚀 Ready to Start Your ARC Journey?</h4>
+                            <p class="text-slate-600 max-w-2xl mx-auto">Everything you need to begin competing in the ARC Prize 2025 and contributing to the future of artificial general intelligence.</p>
+                        </div>
+                        <div class="grid md:grid-cols-2 gap-8">
+                            
+                            <div class="bg-white p-6 rounded-lg shadow-sm border border-slate-200">
+                                <h5 class="!mt-0 !mb-4 text-slate-800 font-semibold flex items-center">
+                                    <span class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3 text-blue-600">📚</span>
+                                    Essential Resources
+                                </h5>
+                                <div class="space-y-3 text-sm">
+                                    <div class="flex items-center p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors">
+                                        <span class="w-2 h-2 bg-blue-500 rounded-full mr-3 flex-shrink-0"></span>
+                                        <a href="https://arcprize.org/" target="_blank" rel="noopener noreferrer" class="w-full">
+                                            <strong class="text-slate-800">ARC Prize Website:</strong>
+                                            <span class="text-slate-600 ml-2">arcprize.org</span>
+                                        </a>
+                                    </div>
+                                    <div class="flex items-center p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors">
+                                        <span class="w-2 h-2 bg-green-500 rounded-full mr-3 flex-shrink-0"></span>
+                                        <a href="https://discord.gg/9b77dPAmcA" target="_blank" rel="noopener noreferrer" class="w-full">
+                                            <strong class="text-slate-800">Official Discord:</strong>
+                                            <span class="text-slate-600 ml-2">ARC Prize Discord</span>
+                                        </a>
+                                    </div>
+                                    <div class="flex items-center p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors">
+                                        <span class="w-2 h-2 bg-purple-500 rounded-full mr-3 flex-shrink-0"></span>
+                                        <a href="https://github.com/fchollet/ARC-AGI" target="_blank" rel="noopener noreferrer" class="w-full">
+                                            <strong class="text-slate-800">GitHub Repository:</strong>
+                                            <span class="text-slate-600 ml-2">fchollet/ARC-AGI</span>
+                                        </a>
+                                    </div>
+                                    <div class="flex items-center p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors">
+                                        <span class="w-2 h-2 bg-orange-500 rounded-full mr-3 flex-shrink-0"></span>
+                                        <a href="https://www.kaggle.com/competitions/arc-prize-2025" target="_blank" rel="noopener noreferrer" class="w-full">
+                                            <strong class="text-slate-800">Kaggle Competition:</strong>
+                                            <span class="text-slate-600 ml-2">ARC Prize 2025</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="bg-white p-6 rounded-lg shadow-sm border border-slate-200">
+                                <h5 class="!mt-0 !mb-4 text-slate-800 font-semibold flex items-center">
+                                    <span class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-3 text-green-600">✅</span>
+                                    Competition Checklist
+                                </h5>
+                                <div class="space-y-3 text-sm">
+                                    
+                                    <div class="checklist-item flex items-center p-3 bg-slate-50 rounded-lg cursor-pointer hover:bg-slate-100 transition-colors">
+                                    <div class="checklist-box w-5 h-5 border-2 border-slate-300 rounded-md mr-3 flex-shrink-0"></div>
+                                        <span class="text-slate-700">Understand the pass@2 metric</span>
+                                    </div>
+                                    
+                                    <div class="checklist-item flex items-center p-3 bg-slate-50 rounded-lg cursor-pointer hover:bg-slate-100 transition-colors">
+                                    <div class="checklist-box w-5 h-5 border-2 border-slate-300 rounded-md mr-3 flex-shrink-0"></div>
+                                        <span class="text-slate-700">Build robust validation pipeline</span>
+                                    </div>
+                                    
+                                    <div class="checklist-item flex items-center p-3 bg-slate-50 rounded-lg cursor-pointer hover:bg-slate-100 transition-colors">
+                                    <div class="checklist-box w-5 h-5 border-2 border-slate-300 rounded-md mr-3 flex-shrink-0"></div>
+                                        <span class="text-slate-700">Study winning solutions</span>
+                                    </div>
+                                    
+                                    <div class="checklist-item flex items-center p-3 bg-slate-50 rounded-lg cursor-pointer hover:bg-slate-100 transition-colors">
+                                    <div class="checklist-box w-5 h-5 border-2 border-slate-300 rounded-md mr-3 flex-shrink-0"></div>
+                                        <span class="text-slate-700">Prepare for open-source requirement</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center mt-8">
+                            <div class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg font-semibold shadow-lg hover:shadow-xl transition-shadow">
+                                <span class="mr-2">🎯</span>
+                                Start Building Your ARC Solver Today
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="pt-16 pb-8">
+                    <div class="bg-gradient-to-r from-blue-50 to-purple-50 p-8 rounded-xl border">
+                        <h3 class="!mt-0 !mb-4 text-center">The Path Forward</h3>
+                        <p class="text-center !mb-6 text-lg">The Abstraction and Reasoning Corpus is far more than a conventional AI benchmark. It is a challenge, a philosophy, and a compass for the field of AGI research. It posits that true intelligence lies not in accumulated skill but in the efficient acquisition of new skills in the face of novelty.</p>
+                        
+                        <div class="text-center">
+                            <p class="!mb-4">By engaging with the open-source code of past champions, participating in the vibrant research community, and focusing on the unsolved frontiers, a dedicated researcher has all the tools necessary to not only compete in—and perhaps even claim the Grand Prize for solving—the ARC Prize, but to contribute meaningfully to the collective, open pursuit of Artificial General Intelligence.</p>
+                            <div class="inline-flex items-center space-x-2 bg-white px-6 py-3 rounded-full shadow-md">
+                                <span class="text-2xl">🧠</span>
+                                <span class="font-semibold">Ready to start your ARC journey?</span>
+                                <span class="text-2xl">🚀</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            </div> </main>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Code tabs functionality
+    const codeTabs = document.getElementById('code-tabs');
+    const tabContents = document.querySelectorAll('.tab-content');
+    if(codeTabs) {
+        codeTabs.addEventListener('click', (e) => {
+            if (e.target.tagName === 'BUTTON') {
+                const target = e.target.dataset.target;
+                
+                codeTabs.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                e.target.classList.add('active');
+
+                tabContents.forEach(content => {
+                    content.classList.remove('active');
+                    if (content.id === target) {
+                        content.classList.add('active');
+                    }
+                });
+            }
+        });
+    }
+
+    // Interactive cards functionality
+    const interactiveCards = document.querySelectorAll('.interactive-card');
+    interactiveCards.forEach(card => {
+        card.addEventListener('click', () => {
+            const detailsDiv = card.querySelector('.details');
+            const detailsText = card.dataset.details;
+            if (detailsDiv.classList.contains('hidden')) {
+                detailsDiv.innerHTML = detailsText;
+                detailsDiv.classList.remove('hidden');
+            } else {
+                detailsDiv.classList.add('hidden');
+            }
+        });
+    });
+    
+    // Navigation functionality
+    const sections = document.querySelectorAll('main section');
+    const navLinks = document.querySelectorAll('#nav-menu a');
+    const menuToggle = document.getElementById('menu-toggle');
+    const sidebar = document.getElementById('sidebar');
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                navLinks.forEach(link => {
+                    link.classList.remove('active-nav');
+                    if (link.getAttribute('href').substring(1) === entry.target.id) {
+                        link.classList.add('active-nav');
+                    }
+                });
+            }
+        });
+    }, { rootMargin: '-30% 0px -70% 0px' });
+
+    sections.forEach(section => {
+        observer.observe(section);
+    });
+
+    menuToggle.addEventListener('click', () => {
+        sidebar.classList.toggle('-translate-x-full');
+    });
+
+    // Generate ARC Grid Background with integrated task
+    function generateIntegratedArcGrid() {
+        const grid = document.getElementById('hero-arc-grid');
+        if (!grid) return;
+
+        const isMobile = window.innerWidth < 768;
+
+        // Only generate grid cells and ARC examples on desktop
+        if (!isMobile) {
+            // Create 20x8 grid (160 cells) for desktop only
+            for (let i = 0; i < 160; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'grid-cell';
+                cell.dataset.index = i;
+                grid.appendChild(cell);
+            }
+
+            // Desktop ARC Task pattern
+            const inputPattern = [
+                {pos: 63, color: 'sky-blue'},  // row 3, col 3: 8 = sky blue
+                {pos: 64, color: 'magenta'},   // row 3, col 4: 6 = magenta
+                {pos: 83, color: 'magenta'},   // row 4, col 3: 6 = magenta
+                {pos: 84, color: 'yellow'}     // row 4, col 4: 4 = yellow
+            ];
+
+            const outputPattern = [
+                // Row 1: 8,6,8,6,8,6
+                {pos: 34, color: 'sky-blue'}, {pos: 35, color: 'magenta'}, {pos: 36, color: 'sky-blue'}, 
+                {pos: 37, color: 'magenta'}, {pos: 38, color: 'sky-blue'}, {pos: 39, color: 'magenta'},
+                // Row 2: 6,4,6,4,6,4
+                {pos: 54, color: 'magenta'}, {pos: 55, color: 'yellow'}, {pos: 56, color: 'magenta'}, 
+                {pos: 57, color: 'yellow'}, {pos: 58, color: 'magenta'}, {pos: 59, color: 'yellow'},
+                // Row 3: 6,8,6,8,6,8
+                {pos: 74, color: 'magenta'}, {pos: 75, color: 'sky-blue'}, {pos: 76, color: 'magenta'}, 
+                {pos: 77, color: 'sky-blue'}, {pos: 78, color: 'magenta'}, {pos: 79, color: 'sky-blue'},
+                // Row 4: 4,6,4,6,4,6
+                {pos: 94, color: 'yellow'}, {pos: 95, color: 'magenta'}, {pos: 96, color: 'yellow'}, 
+                {pos: 97, color: 'magenta'}, {pos: 98, color: 'yellow'}, {pos: 99, color: 'magenta'},
+                // Row 5: 8,6,8,6,8,6
+                {pos: 114, color: 'sky-blue'}, {pos: 115, color: 'magenta'}, {pos: 116, color: 'sky-blue'}, 
+                {pos: 117, color: 'magenta'}, {pos: 118, color: 'sky-blue'}, {pos: 119, color: 'magenta'},
+                // Row 6: 6,4,6,4,6,4
+                {pos: 134, color: 'magenta'}, {pos: 135, color: 'yellow'}, {pos: 136, color: 'magenta'}, 
+                {pos: 137, color: 'yellow'}, {pos: 138, color: 'magenta'}, {pos: 139, color: 'yellow'}
+            ];
+
+            // Apply input pattern
+            inputPattern.forEach(item => {
+                const cell = grid.children[item.pos];
+                if (cell) {
+                    cell.classList.add(item.color);
+                }
+            });
+
+            // Apply output pattern
+            outputPattern.forEach(item => {
+                const cell = grid.children[item.pos];
+                if (cell) {
+                    cell.classList.add(item.color);
+                }
+            });
+        }
+    }
+
+    // Generate the integrated ARC grid
+    generateIntegratedArcGrid();
+});
+document.querySelectorAll('.checklist-item').forEach(item => {
+    item.addEventListener('click', () => {
+        item.classList.toggle('completed');
+    });
+});
+</script>
+
+</body>
+</html>
