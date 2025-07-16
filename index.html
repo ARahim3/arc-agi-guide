@@ -130,6 +130,71 @@
             text-decoration: line-through;
             color: #64748b; /* slate-500 */
         }
+        /* Styling for the interactive glossary term */
+        .glossary-term {
+            color: #1d4ed8; /* blue-700 */
+            font-weight: 600;
+            border-bottom: 2px dotted #93c5fd; /* blue-300 */
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .glossary-term:hover {
+            background-color: #eff6ff; /* blue-50 */
+        }
+
+        /* Styling for the modal pop-up */
+        .glossary-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(15, 23, 42, 0.6); /* slate-900 with opacity */
+            display: none; /* Hidden by default */
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+        }
+        .glossary-modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+            max-width: 600px;
+            width: 90%;
+            position: relative;
+            animation: modal-fade-in 0.3s ease;
+        }
+        @keyframes modal-fade-in {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .glossary-modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            line-height: 1;
+            font-weight: bold;
+            color: #94a3b8; /* slate-400 */
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .glossary-modal-close:hover {
+            color: #1e293b; /* slate-800 */
+        }
+        #glossary-modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 1rem;
+        }
+        #glossary-modal-definition {
+            font-size: 1rem;
+            line-height: 1.75;
+            color: #334155;
+        }
         @keyframes gridShift {
             0% { transform: translate(0, 0); }
             100% { transform: translate(60px, 60px); }
@@ -260,8 +325,18 @@
                     </div>
                 </div>
             </section>
-
             <div class="px-4 py-6 md:px-8 lg:px-12 xl:px-16">
+                <section class="my-12">
+                    <div class="bg-blue-50 border-l-4 border-blue-400 p-6 rounded-r-lg">
+                        <h3 class="!mt-0 !mb-4 !text-slate-800 flex items-center"><span class="text-2xl mr-3">👋</span>A Note from a Fellow Beginner</h3>
+                        <p class="text-slate-600 !mb-0">
+                            Hello! Like many others, I was fascinated by the ARC-AGI challenge but found the learning curve a bit steep. I created this guide as a personal project to connect the dots for myself.
+                            <br>
+                            My goal is simple: to provide a single, clear starting point for newcomers by synthesizing the core concepts into one easy-to-follow narrative. If you're just starting your ARC journey, I hope this resource helps. Happy Journey!
+                        </p>
+                    </div>
+                </section>
+
                 <section class="mb-12">
                     <div class="bg-gradient-to-r from-blue-50 to-teal-50 p-8 rounded-xl border border-blue-100">
                         <h2 class="!mt-0 !mb-4 text-2xl font-bold text-slate-800">What is ARC-AGI?</h2>
@@ -1305,6 +1380,85 @@ cd arc_solver</code></pre>
     </div>
 
 <script>
+// 1. GLOSSARY DATA
+const glossaryData = {
+    "Induction": {
+        title: "Induction (Program Synthesis)",
+        definition: "The 'System 2' or deliberate reasoning path. The goal is to first infer a latent, explicit program or function that fully explains the transformation in the training examples. This program is then applied to the test input to get the prediction."
+    },
+    "Transduction": {
+        title: "Transduction (Direct Prediction)",
+        definition: "The 'System 1' or intuitive path. The goal is to directly predict the test output by considering the training examples and the test input all at once, without necessarily creating an explicit, intermediate program."
+    },
+    "DSL": {
+        title: "Domain-Specific Language (DSL)",
+        definition: "A small, specialized programming language designed for a particular problem domain like ARC. It consists of a curated set of functions (primitives) that perform common grid operations (e.g., `rotate_grid`, `find_objects`). This constrains the search space, making program synthesis feasible."
+    },
+    "TTT": {
+        title: "Test-Time Training (TTT)",
+        definition: "A powerful technique where a model's parameters are temporarily updated via gradient descent at the moment of inference. The model is briefly fine-tuned on the few demonstration pairs of the specific task it is trying to solve, allowing it to specialize its knowledge."
+    },
+    "LoRA": {
+        title: "Low-Rank Adaptation (LoRA)",
+        definition: "A Parameter-Efficient Fine-Tuning (PEFT) technique. It freezes the massive pre-trained model weights and injects small, trainable 'adapter' matrices. During TTT, only these small adapters are updated, allowing for extremely fast and memory-efficient fine-tuning."
+    },
+    "MCTS": {
+        title: "Monte Carlo Tree Search (MCTS)",
+        definition: "A sophisticated heuristic search algorithm, famously used in AlphaGo. It balances exploration (trying new program branches) and exploitation (focusing on promising branches) to efficiently search a large space of possibilities."
+    }
+    // Add more terms here as needed!
+};
+// 2. GLOSSARY MODAL LOGIC
+
+// Create the modal elements once when the page loads
+const modalOverlay = document.createElement('div');
+modalOverlay.className = 'glossary-modal-overlay';
+modalOverlay.innerHTML = `
+    <div class="glossary-modal-content">
+        <span class="glossary-modal-close">&times;</span>
+        <h3 id="glossary-modal-title"></h3>
+        <p id="glossary-modal-definition"></p>
+    </div>
+`;
+document.body.appendChild(modalOverlay);
+
+// Get references to the modal parts
+const modalTitle = document.getElementById('glossary-modal-title');
+const modalDefinition = document.getElementById('glossary-modal-definition');
+const modalCloseBtn = modalOverlay.querySelector('.glossary-modal-close');
+
+// Function to open the modal
+function openGlossaryModal(termKey) {
+    if (glossaryData[termKey]) {
+        modalTitle.textContent = glossaryData[termKey].title;
+        // Use innerHTML to correctly render the [cite] tags if you want them styled differently later
+        modalDefinition.innerHTML = glossaryData[termKey].definition;
+        modalOverlay.style.display = 'flex';
+    }
+}
+
+// Function to close the modal
+function closeGlossaryModal() {
+    modalOverlay.style.display = 'none';
+}
+
+// Find all glossary terms and add click listeners
+document.querySelectorAll('.glossary-term').forEach(termEl => {
+    termEl.addEventListener('click', (event) => {
+        event.preventDefault(); // Stop any default link behavior
+        const termKey = event.target.dataset.term;
+        openGlossaryModal(termKey);
+    });
+});
+
+// Add listeners to close the modal
+modalCloseBtn.addEventListener('click', closeGlossaryModal);
+modalOverlay.addEventListener('click', (event) => {
+    // Only close if the user clicks on the overlay itself, not the content box
+    if (event.target === modalOverlay) {
+        closeGlossaryModal();
+    }
+});
 document.addEventListener('DOMContentLoaded', function () {
     // Code tabs functionality
     const codeTabs = document.getElementById('code-tabs');
@@ -1432,6 +1586,28 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
     }
+    // SCROLL TO TOP BUTTON LOGIC
+    // ===================================================================
+    const scrollTopBtn = document.getElementById('scrollTopBtn');
+
+    // Show or hide the button based on scroll position
+    window.onscroll = function() {
+        if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+            scrollTopBtn.classList.remove('hidden');
+        } else {
+            scrollTopBtn.classList.add('hidden');
+        }
+    };
+
+    // Smooth scroll to top when the button is clicked
+    scrollTopBtn.addEventListener('click', function(e) {
+        e.preventDefault(); // Prevent the default link behavior
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+
 
     // Generate the integrated ARC grid
     generateIntegratedArcGrid();
@@ -1442,6 +1618,10 @@ document.querySelectorAll('.checklist-item').forEach(item => {
     });
 });
 </script>
-
+<a href="#" id="scrollTopBtn" class="hidden fixed bottom-5 right-5 bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full shadow-lg transition-opacity duration-300">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+    </svg>
+</a>
 </body>
 </html>
