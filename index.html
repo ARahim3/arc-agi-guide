@@ -376,7 +376,8 @@
                             <p>The Abstraction and Reasoning Corpus for Artificial General Intelligence (ARC-AGI) is more than a benchmark; it is the manifestation of a specific, rigorous philosophy about the nature of intelligence itself. Introduced by François Chollet, it was designed to address a fundamental flaw in how the AI community measured progress.</p>
                             
                             <h4>Defining Intelligence: Beyond Skill, Towards Skill-Acquisition</h4>
-                            <p>The central tenet of ARC-AGI is that true, general intelligence is not demonstrated by the <strong><em>possession</em></strong> of a specific skill, but by the <strong><em>efficiency of acquiring new skills</em></strong> when faced with novel problems. This stands in stark contrast to many traditional AI benchmarks which measure performance on tasks that can be mastered through extensive training on massive datasets.</p>
+                            <p>The central tenet of ARC-AGI is that true, general intelligence is not demonstrated by the <strong>possession</strong> of a specific skill, but by the <strong>efficiency of acquiring new skills</strong> when faced with novel problems. This stands in stark contrast to many traditional AI benchmarks which measure performance on tasks that can be mastered through extensive training on massive datasets.</p>
+                            <p>To test this, each puzzle follows a consistent <span class="glossary-term" data-term="ARCTaskFormat">ARC Task Format</span>, presenting a small number of examples to learn from.</p>
                         </div>
                         <div class="flex items-start justify-center -mt-14">
                             <div class="bg-white p-3 md:p-4 rounded-xl shadow-lg border w-full max-w-2xl">
@@ -545,14 +546,15 @@
                     </div>
 
                     <h4>Core Knowledge Priors: The Bedrock of Fair Comparison</h4>
-                    <p>To create a fair comparison between human and AI, ARC-AGI tasks are designed to be solvable using only a minimal set of <strong>Core Knowledge Priors</strong>. These are fundamental, universally shared cognitive building blocks that are either innate or acquired very early in development.</p>
+                    <p>To create a fair and meaningful comparison between human and artificial intelligence, ARC-AGI is meticulously designed to test <b>fluid intelligence</b>—the ability to reason, adapt, and solve novel problems—rather than <b>crystallized intelligence</b>, which relies on accumulated, domain-specific knowledge and cultural learning. <br> This distinction is critical. A benchmark that required knowledge of historical facts or the English language would unfairly favor systems (and humans) with specific pre-training, turning the test into a measure of prior exposure rather than innate reasoning ability.</p>
+                    <p>ARC-AGI circumvents this by designing tasks that are solvable using only a minimal set of <strong>Core Knowledge Priors</strong>. These are fundamental, universally shared cognitive building blocks that are either innate or acquired very early in development.</p>
                     
                     <div class="bg-blue-50 border-l-4 border-blue-400 p-6 rounded-r-lg my-8">
                         <h4 class="!mt-0 !text-blue-800">Key Concept: Core Knowledge Priors</h4>
                         <div class="grid md:grid-cols-2 gap-4 !text-blue-700">
                             <div>
                                 <h5 class="font-semibold !mb-2">🔵 Objectness</h5>
-                                <p class="text-sm">Perceiving scenes in terms of discrete objects with properties like cohesion and persistence.</p>
+                                <p class="text-sm">The ability to perceive a scene in terms of discrete objects with properties like cohesion (objects move as wholes) and persistence (objects don't randomly appear or disappear).</p>
                             </div>
                             <div>
                                 <h5 class="font-semibold !mb-2">📐 Basic Topology & Geometry</h5>
@@ -568,6 +570,7 @@
                             </div>
                         </div>
                     </div>
+                    <p>By restricting the required knowledge to these universally accessible primitives, ARC-AGI isolates the capacity for generalization and ensures that success reflects a system's <mark>intrinsic ability to learn, reason, and adapt</mark>. The public training set is explicitly curated to expose a test-taker to all the Core Knowledge priors needed to solve the evaluation tasks, effectively serving as a "tutorial" for the conceptual language of the ARC universe.</p>
 
                     <h4>The Evolution to ARC-AGI-2: Raising the Bar</h4>
                     <p>The introduction of ARC-AGI-2 in 2025 marks a critical evolution, driven by the progress and observed failure modes of AI systems on the original dataset. While powerful AI systems could achieve high scores on ARC-AGI-1, often through brute-force search, ARC-AGI-2 was designed to be less susceptible to these methods. Furthermore, it was specifically created to probe known weaknesses in modern AI reasoning systems.</p>
@@ -1405,7 +1408,24 @@ const glossaryData = {
     "MCTS": {
         title: "Monte Carlo Tree Search (MCTS)",
         definition: "A sophisticated heuristic search algorithm, famously used in AlphaGo. It balances exploration (trying new program branches) and exploitation (focusing on promising branches) to efficiently search a large space of possibilities."
-    }
+    },
+    "ARCTaskFormat": {
+    title: "The ARC Task Format",
+    definition: `
+        Each task in the ARC-AGI dataset follows a consistent, structured format:
+        <ul class="list-disc pl-5 mt-4 space-y-3">
+            <li><strong>Structure:</strong> A task is defined in a JSON file and consists of a train set and a test set.
+                <ul class="list-disc pl-5 mt-1 space-y-1">
+                    <li>The train set contains a small number of demonstration pairs, typically 2 to 5. Each pair shows an input grid transformed into an output grid.</li>
+                    <li>The test set contains one or more input grids. The objective is to infer the rule from the demonstration pairs and apply it to the test input grid(s) to produce the correct output grid(s).</li>
+                </ul>
+            </li>
+            <li><strong>Grids:</strong> The grids are two-dimensional matrices of integers from 0 to 9, where each integer represents a color. Grid sizes are capped at 30x30.</li>
+            <li><strong>Prediction:</strong> The required output is not a simple label but a fully constructed grid of the correct size and with the correct color in every cell.
+ A prediction is only considered correct if it is a <b> pixel-perfect </b> match to the ground truth solution. A single incorrect cell results in a failed attempt. This makes ARC a highly demanding structured prediction problem, far more complex than classification or regression.</li>
+        </ul>
+    `
+    },
     // Add more terms here as needed!
 };
 // 2. GLOSSARY MODAL LOGIC
