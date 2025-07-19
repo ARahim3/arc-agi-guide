@@ -373,179 +373,98 @@
                     <h2>Part I: Foundations</h2>
                     <h3>The Philosophy and Design of ARC-AGI</h3>
                     
-                    <div class="grid md:grid-cols-2 gap-8 items-start my-8">
+
+                    <div class="my-8 flow-root">
+
+                        <div class="md:float-right md:w-1/2 md:pl-8 mb-6 md:mb-0">
+                            <div class="flex items-start justify-center md:-mt-8">
+                                <div class="bg-white p-3 md:p-4 rounded-xl shadow-lg border w-full max-w-2xl">
+                                    <h5 class="text-center font-semibold mb-3 text-slate-700">Example of an ARC Task</h5>
+                                    <div class="mb-4">
+                                        <p class="text-xs text-center mb-2 text-slate-500 font-medium">Training Examples</p>
+                                        <div class="space-y-3">
+                                            <div class="flex items-center justify-center gap-2 md:gap-4">
+                                                <div class="text-center">
+                                                    <div class="grid grid-cols-2 gap-0.5 w-12 h-12 md:w-16 md:h-16 mx-auto mb-1 border border-slate-200 rounded p-0.5">
+                                                        <div class="bg-sky-400 rounded-sm"></div><div class="bg-pink-500 rounded-sm"></div><div class="bg-pink-500 rounded-sm"></div><div class="bg-yellow-500 rounded-sm"></div>
+                                                    </div>
+                                                    <p class="text-xs text-slate-500 font-medium">Input</p>
+                                                </div>
+                                                <div class="text-slate-400 text-lg md:text-xl">→</div>
+                                                <div class="text-center">
+                                                    <div class="grid grid-cols-6 gap-0.5 w-20 h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 mx-auto mb-1 border border-slate-200 rounded p-0.5">
+                                                        <div class="bg-sky-400 rounded-sm"></div><div class="bg-pink-500 rounded-sm"></div><div class="bg-sky-400 rounded-sm"></div><div class="bg-pink-500 rounded-sm"></div><div class="bg-sky-400 rounded-sm"></div><div class="bg-pink-500 rounded-sm"></div>
+                                                        <div class="bg-pink-500 rounded-sm"></div><div class="bg-yellow-500 rounded-sm"></div><div class="bg-pink-500 rounded-sm"></div><div class="bg-yellow-500 rounded-sm"></div><div class="bg-pink-500 rounded-sm"></div><div class="bg-yellow-500 rounded-sm"></div>
+                                                        <div class="bg-pink-500 rounded-sm"></div><div class="bg-sky-400 rounded-sm"></div><div class="bg-pink-500 rounded-sm"></div><div class="bg-sky-400 rounded-sm"></div><div class="bg-pink-500 rounded-sm"></div><div class="bg-sky-400 rounded-sm"></div>
+                                                        <div class="bg-yellow-500 rounded-sm"></div><div class="bg-pink-500 rounded-sm"></div><div class="bg-yellow-500 rounded-sm"></div><div class="bg-pink-500 rounded-sm"></div><div class="bg-yellow-500 rounded-sm"></div><div class="bg-pink-500 rounded-sm"></div>
+                                                        <div class="bg-sky-400 rounded-sm"></div><div class="bg-pink-500 rounded-sm"></div><div class="bg-sky-400 rounded-sm"></div><div class="bg-pink-500 rounded-sm"></div><div class="bg-sky-400 rounded-sm"></div><div class="bg-pink-500 rounded-sm"></div>
+                                                        <div class="bg-pink-500 rounded-sm"></div><div class="bg-yellow-500 rounded-sm"></div><div class="bg-pink-500 rounded-sm"></div><div class="bg-yellow-500 rounded-sm"></div><div class="bg-pink-500 rounded-sm"></div><div class="bg-yellow-500 rounded-sm"></div>
+                                                    </div>
+                                                    <p class="text-xs text-slate-500 font-medium">Output</p>
+                                                </div>
+                                            </div>
+                                            <div class="flex items-center justify-center gap-2 md:gap-4">
+                                                <div class="text-center">
+                                                    <div class="grid grid-cols-2 gap-0.5 w-12 h-12 md:w-16 md:h-16 mx-auto mb-1 border border-slate-200 rounded p-0.5">
+                                                        <div class="bg-orange-500 rounded-sm"></div><div class="bg-amber-800 rounded-sm"></div><div class="bg-yellow-500 rounded-sm"></div><div class="bg-green-500 rounded-sm"></div>
+                                                    </div>
+                                                    <p class="text-xs text-slate-500 font-medium">Input</p>
+                                                </div>
+                                                <div class="text-slate-400 text-lg md:text-xl">→</div>
+                                                <div class="text-center">
+                                                    <div class="grid grid-cols-6 gap-0.5 w-20 h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 mx-auto mb-1 border border-slate-200 rounded p-0.5">
+                                                        <div class="bg-orange-500 rounded-sm"></div><div class="bg-amber-800 rounded-sm"></div><div class="bg-orange-500 rounded-sm"></div><div class="bg-amber-800 rounded-sm"></div><div class="bg-orange-500 rounded-sm"></div><div class="bg-amber-800 rounded-sm"></div>
+                                                        <div class="bg-yellow-500 rounded-sm"></div><div class="bg-green-500 rounded-sm"></div><div class="bg-yellow-500 rounded-sm"></div><div class="bg-green-500 rounded-sm"></div><div class="bg-yellow-500 rounded-sm"></div><div class="bg-green-500 rounded-sm"></div>
+                                                        <div class="bg-amber-800 rounded-sm"></div><div class="bg-orange-500 rounded-sm"></div><div class="bg-amber-800 rounded-sm"></div><div class="bg-orange-500 rounded-sm"></div><div class="bg-amber-800 rounded-sm"></div><div class="bg-orange-500 rounded-sm"></div>
+                                                        <div class="bg-green-500 rounded-sm"></div><div class="bg-yellow-500 rounded-sm"></div><div class="bg-green-500 rounded-sm"></div><div class="bg-yellow-500 rounded-sm"></div><div class="bg-green-500 rounded-sm"></div><div class="bg-yellow-500 rounded-sm"></div>
+                                                        <div class="bg-orange-500 rounded-sm"></div><div class="bg-amber-800 rounded-sm"></div><div class="bg-orange-500 rounded-sm"></div><div class="bg-amber-800 rounded-sm"></div><div class="bg-orange-500 rounded-sm"></div><div class="bg-amber-800 rounded-sm"></div>
+                                                        <div class="bg-yellow-500 rounded-sm"></div><div class="bg-green-500 rounded-sm"></div><div class="bg-yellow-500 rounded-sm"></div><div class="bg-green-500 rounded-sm"></div><div class="bg-yellow-500 rounded-sm"></div><div class="bg-green-500 rounded-sm"></div>
+                                                    </div>
+                                                    <p class="text-xs text-slate-500 font-medium">Output</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="border-t pt-3">
+                                        <p class="text-xs text-center mb-2 text-slate-600 font-medium">Test</p>
+                                        <div class="flex items-center justify-center gap-2 md:gap-4">
+                                            <div class="text-center">
+                                                <div class="grid grid-cols-2 gap-0.25 w-12 h-12 md:w-16 md:h-16 mx-auto mb-1 border border-slate-200 rounded p-0.5">
+                                                    <div class="bg-green-500 rounded-sm"></div><div class="bg-red-500 rounded-sm"></div><div class="bg-orange-500 rounded-sm"></div><div class="bg-sky-400 rounded-sm"></div>
+                                                </div>
+                                                <p class="text-xs text-slate-500 font-medium">Input</p>
+                                            </div>
+                                            <div class="text-slate-400 text-lg md:text-xl">→</div>
+                                            <div class="text-center">
+                                                <div class="grid grid-cols-6 gap-0.5 w-20 h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 mx-auto mb-1 border-2 border-dashed border-yellow-400 bg-yellow-50 rounded p-0.5">
+                                                    <div class="bg-gray-100 opacity-50 rounded-sm"></div><div class="bg-gray-100 opacity-50 rounded-sm"></div><div class="bg-gray-100 opacity-50 rounded-sm"></div><div class="bg-gray-100 opacity-50 rounded-sm"></div><div class="bg-gray-100 opacity-50 rounded-sm"></div><div class="bg-gray-100 opacity-50 rounded-sm"></div><div class="bg-gray-100 opacity-50 rounded-sm"></div><div class="bg-gray-100 opacity-50 rounded-sm"></div><div class="bg-gray-100 opacity-50 rounded-sm"></div><div class="bg-gray-100 opacity-50 rounded-sm"></div><div class="bg-gray-100 opacity-50 rounded-sm"></div><div class="bg-gray-100 opacity-50 rounded-sm"></div><div class="bg-gray-100 opacity-50 rounded-sm"></div><div class="bg-gray-100 opacity-50 rounded-sm"></div><div class="bg-gray-100 opacity-50 rounded-sm"></div><div class="bg-gray-100 opacity-50 rounded-sm"></div><div class="bg-gray-100 opacity-50 rounded-sm"></div><div class="bg-gray.100 opacity-50 rounded-sm"></div><div class="bg-gray-100 opacity-50 rounded-sm"></div><div class="bg-gray-100 opacity-50 rounded-sm"></div><div class="bg-gray-100 opacity-50 rounded-sm"></div><div class="bg-gray-100 opacity-50 rounded-sm"></div><div class="bg-gray-100 opacity-50 rounded-sm"></div><div class="bg-gray-100 opacity-50 rounded-sm"></div><div class="bg-gray-100 opacity-50 rounded-sm"></div><div class="bg-gray-100 opacity-50 rounded-sm"></div><div class="bg-gray-100 opacity-50 rounded-sm"></div><div class="bg-gray-100 opacity-50 rounded-sm"></div><div class="bg-gray-100 opacity-50 rounded-sm"></div><div class="bg-gray-100 opacity-50 rounded-sm"></div><div class="bg-gray-100 opacity-50 rounded-sm"></div><div class="bg-gray-100 opacity-50 rounded-sm"></div><div class="bg-gray-100 opacity-50 rounded-sm"></div><div class="bg-gray-100 opacity-50 rounded-sm"></div><div class="bg-gray-100 opacity-50 rounded-sm"></div>
+                                                </div>
+                                                <p class="text-xs text-slate-500 font-medium">Output?</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="text-center mt-3">
+                                        <div class="inline-block bg-slate-100 px-3 py-1 rounded-full border border-slate-300">
+                                            <span class="text-xs font-medium text-slate-700">🤔 Can you find the pattern?</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div>
                             <p>The Abstraction and Reasoning Corpus for Artificial General Intelligence (ARC-AGI) is more than a benchmark; it is the manifestation of a specific, rigorous philosophy about the nature of intelligence itself. Introduced by François Chollet, it was designed to address a fundamental flaw in how the AI community measured progress.</p>
                             
                             <h4>Defining Intelligence: Beyond Skill, Towards Skill-Acquisition</h4>
                             <p>The central tenet of ARC-AGI is that true, general intelligence is not demonstrated by the <strong>possession</strong> of a specific skill, but by the <strong>efficiency of acquiring new skills</strong> when faced with novel problems. This stands in stark contrast to many traditional AI benchmarks which measure performance on tasks that can be mastered through extensive training on massive datasets.</p>
-                            <p>To test this, each puzzle follows a consistent <span class="glossary-term" data-term="ARCTaskFormat">ARC Task Format</span>, presenting a small number of examples to learn from.</p>
-                        </div>
-                        <div class="flex items-start justify-center -mt-14">
-                            <div class="bg-white p-3 md:p-4 rounded-xl shadow-lg border w-full max-w-2xl">
-                                <h5 class="text-center font-semibold mb-3 text-slate-700">Example of an ARC Task</h5>
-                                <div class="mb-4">
-                                    <p class="text-xs text-center mb-2 text-slate-500 font-medium">Training Examples</p>
-                                    <div class="space-y-3">
-                                        <div class="flex items-center justify-center gap-2 md:gap-4">
-                                            <div class="text-center">
-                                                <div class="grid grid-cols-2 gap-0.5 w-12 h-12 md:w-16 md:h-16 mx-auto mb-1 border border-slate-200 rounded p-0.5">
-                                                    <div class="bg-sky-400 rounded-sm"></div> <div class="bg-pink-500 rounded-sm"></div> <div class="bg-pink-500 rounded-sm"></div> <div class="bg-yellow-500 rounded-sm"></div> </div>
-                                                <p class="text-xs text-slate-500 font-medium">Input</p>
-                                            </div>
-                                            <div class="text-slate-400 text-lg md:text-xl">→</div>
-                                            <div class="text-center">
-                                                <div class="grid grid-cols-6 gap-0.5 w-20 h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 mx-auto mb-1 border border-slate-200 rounded p-0.5">
-                                                    <div class="bg-sky-400 rounded-sm"></div>
-                                                    <div class="bg-pink-500 rounded-sm"></div>
-                                                    <div class="bg-sky-400 rounded-sm"></div>
-                                                    <div class="bg-pink-500 rounded-sm"></div>
-                                                    <div class="bg-sky-400 rounded-sm"></div>
-                                                    <div class="bg-pink-500 rounded-sm"></div>
-                                                    <div class="bg-pink-500 rounded-sm"></div>
-                                                    <div class="bg-yellow-500 rounded-sm"></div>
-                                                    <div class="bg-pink-500 rounded-sm"></div>
-                                                    <div class="bg-yellow-500 rounded-sm"></div>
-                                                    <div class="bg-pink-500 rounded-sm"></div>
-                                                    <div class="bg-yellow-500 rounded-sm"></div>
-                                                    <div class="bg-pink-500 rounded-sm"></div>
-                                                    <div class="bg-sky-400 rounded-sm"></div>
-                                                    <div class="bg-pink-500 rounded-sm"></div>
-                                                    <div class="bg-sky-400 rounded-sm"></div>
-                                                    <div class="bg-pink-500 rounded-sm"></div>
-                                                    <div class="bg-sky-400 rounded-sm"></div>
-                                                    <div class="bg-yellow-500 rounded-sm"></div>
-                                                    <div class="bg-pink-500 rounded-sm"></div>
-                                                    <div class="bg-yellow-500 rounded-sm"></div>
-                                                    <div class="bg-pink-500 rounded-sm"></div>
-                                                    <div class="bg-yellow-500 rounded-sm"></div>
-                                                    <div class="bg-pink-500 rounded-sm"></div>
-                                                    <div class="bg-sky-400 rounded-sm"></div>
-                                                    <div class="bg-pink-500 rounded-sm"></div>
-                                                    <div class="bg-sky-400 rounded-sm"></div>
-                                                    <div class="bg-pink-500 rounded-sm"></div>
-                                                    <div class="bg-sky-400 rounded-sm"></div>
-                                                    <div class="bg-pink-500 rounded-sm"></div>
-                                                    <div class="bg-pink-500 rounded-sm"></div>
-                                                    <div class="bg-yellow-500 rounded-sm"></div>
-                                                    <div class="bg-pink-500 rounded-sm"></div>
-                                                    <div class="bg-yellow-500 rounded-sm"></div>
-                                                    <div class="bg-pink-500 rounded-sm"></div>
-                                                    <div class="bg-yellow-500 rounded-sm"></div>
-                                                </div>
-                                                <p class="text-xs text-slate-500 font-medium">Output</p>
-                                            </div>
-                                        </div>
-                                        <div class="flex items-center justify-center gap-2 md:gap-4">
-                                            <div class="text-center">
-                                                <div class="grid grid-cols-2 gap-0.5 w-12 h-12 md:w-16 md:h-16 mx-auto mb-1 border border-slate-200 rounded p-0.5">
-                                                    <div class="bg-orange-500 rounded-sm"></div> <div class="bg-amber-800 rounded-sm"></div> <div class="bg-yellow-500 rounded-sm"></div> <div class="bg-green-500 rounded-sm"></div> </div>
-                                                <p class="text-xs text-slate-500 font-medium">Input</p>
-                                            </div>
-                                            <div class="text-slate-400 text-lg md:text-xl">→</div>
-                                            <div class="text-center">
-                                                <div class="grid grid-cols-6 gap-0.5 w-20 h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 mx-auto mb-1 border border-slate-200 rounded p-0.5">
-                                                    <div class="bg-orange-500 rounded-sm"></div>
-                                                    <div class="bg-amber-800 rounded-sm"></div>
-                                                    <div class="bg-orange-500 rounded-sm"></div>
-                                                    <div class="bg-amber-800 rounded-sm"></div>
-                                                    <div class="bg-orange-500 rounded-sm"></div>
-                                                    <div class="bg-amber-800 rounded-sm"></div>
-                                                    <div class="bg-yellow-500 rounded-sm"></div>
-                                                    <div class="bg-green-500 rounded-sm"></div>
-                                                    <div class="bg-yellow-500 rounded-sm"></div>
-                                                    <div class="bg-green-500 rounded-sm"></div>
-                                                    <div class="bg-yellow-500 rounded-sm"></div>
-                                                    <div class="bg-green-500 rounded-sm"></div>
-                                                    <div class="bg-amber-800 rounded-sm"></div>
-                                                    <div class="bg-orange-500 rounded-sm"></div>
-                                                    <div class="bg-amber-800 rounded-sm"></div>
-                                                    <div class="bg-orange-500 rounded-sm"></div>
-                                                    <div class="bg-amber-800 rounded-sm"></div>
-                                                    <div class="bg-orange-500 rounded-sm"></div>
-                                                    <div class="bg-green-500 rounded-sm"></div>
-                                                    <div class="bg-yellow-500 rounded-sm"></div>
-                                                    <div class="bg-green-500 rounded-sm"></div>
-                                                    <div class="bg-yellow-500 rounded-sm"></div>
-                                                    <div class="bg-green-500 rounded-sm"></div>
-                                                    <div class="bg-yellow-500 rounded-sm"></div>
-                                                    <div class="bg-orange-500 rounded-sm"></div>
-                                                    <div class="bg-amber-800 rounded-sm"></div>
-                                                    <div class="bg-orange-500 rounded-sm"></div>
-                                                    <div class="bg-amber-800 rounded-sm"></div>
-                                                    <div class="bg-orange-500 rounded-sm"></div>
-                                                    <div class="bg-amber-800 rounded-sm"></div>
-                                                    <div class="bg-yellow-500 rounded-sm"></div>
-                                                    <div class="bg-green-500 rounded-sm"></div>
-                                                    <div class="bg-yellow-500 rounded-sm"></div>
-                                                    <div class="bg-green-500 rounded-sm"></div>
-                                                    <div class="bg-yellow-500 rounded-sm"></div>
-                                                    <div class="bg-green-500 rounded-sm"></div>
-                                                </div>
-                                                <p class="text-xs text-slate-500 font-medium">Output</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="border-t pt-3">
-                                    <p class="text-xs text-center mb-2 text-slate-600 font-medium">Test</p>
-                                    <div class="flex items-center justify-center gap-2 md:gap-4">
-                                        <div class="text-center">
-                                            <div class="grid grid-cols-2 gap-0.25 w-12 h-12 md:w-16 md:h-16 mx-auto mb-1 border border-slate-200 rounded p-0.5">
-                                                <div class="bg-green-500 rounded-sm"></div> <div class="bg-red-500 rounded-sm"></div> <div class="bg-orange-500 rounded-sm"></div> <div class="bg-sky-400 rounded-sm"></div> </div>
-                                            <p class="text-xs text-slate-500 font-medium">Input</p>
-                                        </div>
-                                        <div class="text-slate-400 text-lg md:text-xl">→</div>
-                                        <div class="text-center">
-                                            <div class="grid grid-cols-6 gap-0.5 w-20 h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 mx-auto mb-1 border-2 border-dashed border-yellow-400 bg-yellow-50 rounded p-0.5">
-                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
-                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
-                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
-                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
-                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
-                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
-                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
-                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
-                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
-                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
-                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
-                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
-                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
-                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
-                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
-                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
-                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
-                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
-                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
-                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
-                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
-                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
-                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
-                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
-                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
-                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
-                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
-                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
-                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
-                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
-                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
-                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
-                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
-                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
-                                                <div class="bg-gray-100 opacity-50 rounded-sm"></div>
-                                            </div>
-                                            <p class="text-xs text-slate-500 font-medium">Output?</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="text-center mt-3">
-                                    <div class="inline-block bg-slate-100 px-3 py-1 rounded-full border border-slate-300">
-                                        <span class="text-xs font-medium text-slate-700">🤔 Can you find the pattern?</span>
-                                    </div>
-                                </div>
-                            </div>
+                            <p>In such cases, high performance can be "bought" with sufficient data and compute, masking the system's underlying ability to generalize and adapt. An AI that achieves superhuman performance at Go has mastered Go; it has not necessarily become more intelligent in a general sense.</p>
+                            <p>Chollet formalizes this concept by defining intelligence as a measure of a system's skill-acquisition efficiency over a given scope of tasks, taking into account its prior knowledge, experience, and the difficulty of generalization. ARC-AGI is the concrete application of this definition. Each task is unique and designed to be unsolvable through mere memorization or pattern matching against a training set.</p>
+                            <p>To measure this skill acquisition in a controlled way, every puzzle adheres to a consistent structure. This structure, the <span class="glossary-term" data-term="ARCTaskFormat">ARC Task Format</span>, presents a small number of examples to learn from.</p>
+                            
                         </div>
                     </div>
+
+
 
                     <h4>Core Knowledge Priors: The Bedrock of Fair Comparison</h4>
                     <p>To create a fair and meaningful comparison between human and artificial intelligence, ARC-AGI is meticulously designed to test <b>fluid intelligence</b>—the ability to reason, adapt, and solve novel problems—rather than <b>crystallized intelligence</b>, which relies on accumulated, domain-specific knowledge and cultural learning. <br> This distinction is critical. A benchmark that required knowledge of historical facts or the English language would unfairly favor systems (and humans) with specific pre-training, turning the test into a measure of prior exposure rather than innate reasoning ability.</p>
@@ -607,7 +526,7 @@
                 <div class="section-divider"></div>
 
                 <section id="ecosystem" class="pt-16">
-                    <h3>The ARC-AGI Ecosystem: Datasets, Evaluation, and Community</h3>
+                    <h3>The ARC-AGI Ecosystem: Datasets and Evaluation</h3>
                     <p>Successfully navigating the ARC-AGI challenge requires a firm grasp of its practical ecosystem, which includes a structured set of datasets, specific evaluation protocols, and a vibrant community with essential resources.</p>
                     
                     <h4>Navigating the ARC Datasets</h4>
@@ -831,19 +750,19 @@
                 
                 <section id="duality" class="pt-16">
                     <h3>The Duality of Induction and Transduction</h3>
-                    <p>A fundamental duality in problem-solving strategies has become apparent in ARC research, formalized in the prize-winning paper by Li et al. Understanding this is key to building a top-tier solver, as the best solutions are ensembles that combine both approaches.</p>
+                    <p>A fundamental duality in problem-solving strategies has become apparent in ARC research, formalized in the prize-winning paper by Li et al. This duality mirrors the concepts of <span class="glossary-term" data-term="SystemThinking">System 1 and System 2 thinking</span>, a popular model in cognitive science used to describe the two paths of human reasoning. Understanding this is key to building a top-tier solver, as the best solutions are ensembles that combine both approaches.</p>
                     
                     <div class="grid md:grid-cols-2 gap-8 my-8">
                         <div class="bg-blue-50 p-6 rounded-lg border border-blue-200">
                             <h4 class="!mt-0 font-bold text-blue-800">🔍 Induction (Program Synthesis)</h4>
-                            <p class="!text-blue-700">The <strong>System 2</strong>, deliberate reasoning path. First infer an explicit program <code>f</code> that explains the examples, then apply it. <code>y_test = f(x_test)</code></p>
+                            <p class="!text-blue-700">The <b>System 2</b>, deliberate reasoning path. The goal is to first infer a latent, explicit program or function <code>f</code> that fully explains the transformation in the training examples. This program <code>f</code> is then applied to the test input <code>x_test</code> to get the prediction <code>y_test = f(x_test)</code>. The classic DSL-based search methods described earlier are inductive.</p>
                             <div class="mt-4 p-3 bg-white rounded border">
                                 <p class="!mb-0 text-sm"><strong>Excels at:</strong> Tasks requiring precision, multi-step logic, compositionality, and explicit computation.</p>
                             </div>
                         </div>
                         <div class="bg-green-50 p-6 rounded-lg border border-green-200">
                             <h4 class="!mt-0 font-bold text-green-800">⚡ Transduction (Direct Prediction)</h4>
-                            <p class="!text-green-700">The <strong>System 1</strong>, intuitive path. Directly predict <code>y_test</code> by considering all examples at once, without necessarily forming an intermediate program. Test-Time Training is a primarily transductive method.</p>
+                            <p class="!text-green-700">The <strong>System 1</strong>, intuitive path. The goal is to directly predict the test output <code>y_test</code> by considering the training examples <code>(x_train, y_train)</code> and the test input x_test all at once, without necessarily creating an explicit, intermediate program. The LLM-based Test-Time Training approaches described earlier are primarily transductive.</p>
                             <div class="mt-4 p-3 bg-white rounded border">
                                 <p class="!mb-0 text-sm"><strong>Excels at:</strong> Tasks relying on "fuzzy" perception, pattern completion, and holistic transformations.</p>
                             </div>
@@ -1423,11 +1342,21 @@ const glossaryData = {
                 </ul>
             </li>
             <li><strong>Grids:</strong> The grids are two-dimensional matrices of integers from 0 to 9, where each integer represents a color. Grid sizes are capped at 30x30.</li>
-            <li><strong>Prediction:</strong> The required output is not a simple label but a fully constructed grid of the correct size and with the correct color in every cell.
- A prediction is only considered correct if it is a <b> pixel-perfect </b> match to the ground truth solution. A single incorrect cell results in a failed attempt. This makes ARC a highly demanding structured prediction problem, far more complex than classification or regression.</li>
+            <li><strong>Prediction:</strong> The required output is not a simple label but a fully constructed grid of the correct size and with the correct color in every cell. <br>A prediction is only considered correct if it is a <b> pixel-perfect </b> match to the ground truth solution. A single incorrect cell results in a failed attempt. This makes ARC a highly demanding structured prediction problem, far more complex than classification or regression.</li>
         </ul>
     `
     },
+    "SystemThinking": {
+    title: "System 1 & System 2 Thinking",
+    definition: `
+        The concepts of <b>System 1</b> and <b>System 2</b> thinking were developed by psychologists Keith Stanovich and Richard West and later popularized by Nobel laureate <b>Daniel Kahneman</b> in his influential 2011 book, <em>"Thinking, Fast and Slow."</em> This framework describes two distinct modes of human thought:
+        <ul class="list-disc pl-5 mt-3 space-y-2">
+            <li><strong>🧠 System 1 (The Intuitive Mind):</strong> This is our fast, automatic, and intuitive mode of thinking. It operates effortlessly and is responsible for our "gut reactions," snap judgments, and learned skills that have become second nature, like recognizing a friend's face or solving 2+2. In the context of AI, this is analogous to <b>transduction</b>, where a model makes a holistic, pattern-based prediction directly.</li>
+            <li><strong>🤔 System 2 (The Deliberate Mind):</strong> This is our slow, effortful, and logical mode of thinking. It requires conscious attention and is used for complex tasks like solving a difficult math problem, weighing pros and cons, or learning a new skill. In AI, this aligns with <b>induction</b> or program synthesis, where a system deliberately builds a step-by-step logical program to arrive at a solution.</li>
+        </ul>
+        <br>The key idea is that our minds use a combination of these two systems. We rely on the efficiency of System 1 for most daily tasks, but we must engage the more resource-intensive System 2 to handle novel or complex challenges that require explicit reasoning.
+    `
+},
     // Add more terms here as needed!
 };
 // 2. GLOSSARY MODAL LOGIC
