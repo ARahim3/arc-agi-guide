@@ -593,7 +593,8 @@
                     </div>
 
                     <h3>Program Synthesis and Domain-Specific Languages (DSLs)</h3>
-                    <p>One of the most natural and historically significant approaches to ARC is program synthesis. This paradigm directly tackles the core of the challenge: inferring a general rule from examples.</p>
+                    <p>One of the most natural and historically significant approaches to ARC is program synthesis. This paradigm directly tackles the core of the challenge: inferring a general rule from examples. Program Synthesis, also known as Inductive Programming, is the task of
+automatically generating a computer program that meets a given high-level specification. In the context of ARC, the specification is the set of demonstration pairs. <br><br>The goal is to find a program, <code>P</code>, that correctly transforms each training input grid into its corresponding output grid. If such a program is found, it is assumed to represent the underlying rule of the task and can then be applied to the test input grid to generate a solution. <br><br>This approach is fundamentally <b>inductive</b>: it first infers a general, abstract rule (the program) from specific examples, and only then executes that rule to produce a specific prediction. This contrasts with <b>transductive</b> methods, which predict the output directly from the examples without necessarily forming an explicit, reusable program. Program synthesis was the dominant strategy in the early days of ARC, with the 2020 Kaggle competition winner employing these techniques.</p>
                     
                     <div class="my-8">
                         <div class="mb-8">
@@ -612,7 +613,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="bg-white p-6 rounded-xl shadow-lg border w-full">
+                        <div class="bg-white p-6 pb-1 rounded-xl shadow-lg border w-full">
                             <h5 class="!mt-0 !mb-4 font-semibold text-center">DSL Program Example</h5>
                             <div class="bg-slate-900 rounded-lg p-4 font-mono text-sm overflow-x-auto">
                                 <div class="flex items-center mb-3">
@@ -654,8 +655,9 @@
 
     <span class="text-purple-400">return</span> <span class="text-blue-400">O</span></code></pre>
                             </div>
-                            <p class="text-sm text-slate-600 mt-3 text-center">Complete solver from Michael Hodel's arc-dsl that shifts objects upward by their height</p>
+                            <p class="text-sm text-slate-900 mt-4 text-center">Combined primitives in action</p>
                         </div>
+                        <p><br>This example beautifully illustrates the paradigm. The solution is not a monolithic neural network but an interpretable, multi-step program. Each line applies a well-defined primitive from the DSL. The program first deconstructs the input grid into objects (<code>dsl.objects</code>), then computes a transformation for them (the shifter function), applies this transformation (<code>dsl.mapply</code>), and finally reconstructs the output grid (<code>dsl.paint</code>). A program synthesis system would need to <em>find</em> this specific sequence of seven function calls out of a vast number of possibilities.</p>
                     </div>
                 </section>
 
